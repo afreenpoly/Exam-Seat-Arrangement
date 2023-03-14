@@ -1,9 +1,11 @@
 from flask import Flask,render_template,request
-import json
+import json,pandas as pd
 app=Flask(__name__)
 
 stufiles=open("studetails.txt","r")
-list=json.load(stufiles)
+stulist=json.load(stufiles)
+
+
 
 @app.route("/")
 def hi():
@@ -14,11 +16,22 @@ def hi():
 @app.route('/submit', methods=["POST"])
 def home1():
     dict=request.form
-    list.append(dict)
+    stulist.append(dict)
     stufile=open("studetails.txt","w")
-    json.dump(list,stufile)
+    json.dump(stulist,stufile)
     stufile.close()
-    return list
+    return stulist
+  
+@app.route('/data', methods=["GET"])
+def data():
+  studata=open("Test.csv","r")
+  while True:
+    line = studata.readline()
+    if not line:
+        break
+    print()
+
+
 
 
   
