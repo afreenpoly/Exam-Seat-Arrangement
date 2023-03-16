@@ -52,63 +52,76 @@ def data():
 
 @app.route('/seating', methods=["GET"])
 def seating():
-  k = 0
-  for i in stulist:
-      if len(listy)==0:
-        break
-      a = ceil(int(i["column"])/2)*int(i["rows"])
-      b = (int(i["column"])*int(i["rows"]))-a
-      print(listy)
-      print("\n")
-      firstitem = listy[0]
-      listy.pop(0)
-      print(listy)
-      print("\n")
-      print(stulist)
-      print("\n")
-      for j in range(0, a):
-        if len(firstitem["ro"]) == 0:
-          firstitem = listy[0]
-          listy.pop(0)
-          print(listy)
-          print("\n")
-          print(stulist)
-          print("\n")
-        i["a"].append(firstitem["ro"][0])
-        firstitem["ro"].pop(0)
+    k = 0
+    for i in stulist:
+        if len(listy) == 0:
+            break
+        a = ceil(int(i["column"])/2)*int(i["rows"])
+        b = (int(i["column"])*int(i["rows"]))-a
+        print("before pop\n")
         print(listy)
         print("\n")
-        print(stulist)
-        print("\n")
-      if len(firstitem["ro"]) != 0:
-        listy.append(firstitem)
         firstitem = listy[0]
         listy.pop(0)
-        print(listy)
-        print("\n")
-        print(stulist)
-        print("\n")
-      for k in range(0, b):
         if len(firstitem["ro"]) == 0:
-          firstitem = listy[0]
-          listy.pop(0)
-          print(listy)
-          print("\n")
-          print(stulist)
-          print("\n")
-        i["b"].append(firstitem["ro"][0])
-        firstitem["ro"].pop(0)
+            continue
         print(listy)
         print("\n")
         print(stulist)
         print("\n")
-      if len(firstitem["ro"]) != 0:
-        listy.append(firstitem)
-        print(listy)
-        print("\n")
-        print(stulist)
-        print("\n")
-  return list(stulist)
+        for j in range(0, a):
+            if len(firstitem["ro"]) == 0:
+                if len(listy) == 0:
+                    break
+                print("before pop\n")
+                firstitem = listy[0]
+                listy.pop(0)
+                print(listy)
+                print("\n")
+                print(stulist)
+                print("\n")
+            i["a"].append(firstitem["ro"][0])
+            print("before pop\n")
+            firstitem["ro"].pop(0)
+            print(listy)
+            print("\n")
+            print(stulist)
+            print("\n")
+        if len(firstitem["ro"]) != 0:
+            print("before pop\n")
+            listy.append(firstitem)
+            firstitem = listy[0]
+            listy.pop(0)
+            print(listy)
+            print("\n")
+            print(stulist)
+            print("\n")
+        for k in range(0, b):
+            if len(firstitem["ro"]) == 0:
+                if len(listy) == 0:
+                    break
+                print("before pop\n")
+                firstitem = listy[0]
+                listy.pop(0)
+                print(listy)
+                print("\n")
+                print(stulist)
+                print("\n")
+            i["b"].append(firstitem["ro"][0])
+            print("before pop\n")
+            firstitem["ro"].pop(0)
+            print(listy)
+            print("\n")
+            print(stulist)
+            print("\n")
+        if len(firstitem["ro"]) != 0:
+            listy.append(firstitem)
+            print(listy)
+            print("\n")
+            print(stulist)
+            print("\n")
+    return list(stulist)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
