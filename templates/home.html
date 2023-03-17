@@ -10,31 +10,38 @@
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="homestyle.css" />
   </head>
   <body>
-    <div class="container">
-      <form action="/submit" method="POST">
-        <div class="form-group">
-          <label>Column:</label>
-          <input name="column" type="text" class="form-control" />
-          <label>Row:</label>
-          <input name="rows" type="text" class="form-control" />
-          <label>Number of Class:</label>
-          <input name="noofclass" type="text" class="form-control" />
-          <input id="submitbutton" name="" type="submit" />
-        </div>
-      </form>
+    <div class="header">
+      <h1>Seating Arrangement</h1>
     </div>
 
-    <div class="container">
-      <form action="/student" method="POST">
-        <div class="form-group">
-          <label>Roll No</label>
-          <input name="rollnum" type="text" class="form-control" />
-          <input id="submitbutton" name="" type="submit" />
+    <div class="middle container">
+      <div class="row">
+        <div class="col card-deck mb-3 text-center">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+              <h4 class="my-0 font-weight-normal">Student</h4>
+            </div>
+            <a type="button" class="my-button btn btn-lg btn-block btn-primary" href="student.html">
+              Login
+            </a>
+          </div>
         </div>
-      </form>
+        <div class="col card mb-4 shadow-sm text-center">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Admin</h4>
+          </div>
+          <a
+            type="button"
+            class="my-button btn btn-lg btn-block btn-outline-primary"
+            href="admin.html"
+          >
+            Login
+          </a>
+        </div>
+      </div>
     </div>
   </body>
 </html>

@@ -7,7 +7,7 @@ app = Flask(__name__)
 stufiles = open("studetails.txt", "r")
 stulist = json.load(stufiles)
 listy = []
-
+newlist=[]
 
 @app.route("/")
 def hi():
@@ -84,6 +84,7 @@ def seating():
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)
+    global newlist
     newlist=list(stulist)
     return newlist
     

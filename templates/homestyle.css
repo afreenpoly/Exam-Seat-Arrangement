@@ -1,0 +1,17 @@
+.header{
+    padding: 10px;
+    background-color: rgb(243, 210, 167);
+}
+
+.middle{
+    margin-top: 60px;
+    padding: 10px;
+}
+
+.my-button{
+    margin-top: 100px;
+}
+
+#submitbutton{
+    margin-top: 100px;
+}
