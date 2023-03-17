@@ -6,7 +6,6 @@ app = Flask(__name__)
 
 stufiles = open("studetails.txt", "r")
 stulist = json.load(stufiles)
-
 listy = []
 
 
@@ -58,77 +57,41 @@ def seating():
             break
         a = ceil(int(i["column"])/2)*int(i["rows"])
         b = (int(i["column"])*int(i["rows"]))-a
-        print("before pop\n")
-        print(listy)
-        print("\n")
         firstitem = listy[0]
         listy.pop(0)
         if len(firstitem["ro"]) == 0:
             continue
-        print(listy)
-        print("\n")
-        print(stulist)
-        print("\n")
         for j in range(0, a):
             if len(firstitem["ro"]) == 0:
                 if len(listy) == 0:
                     break
-                print("before pop\n")
                 firstitem = listy[0]
                 listy.pop(0)
-                print(listy)
-                print("\n")
-                print(stulist)
-                print("\n")
             i["a"].append(firstitem["ro"][0])
-            print("before pop\n")
             firstitem["ro"].pop(0)
-            print(listy)
-            print("\n")
-            print(stulist)
-            print("\n")
         if len(firstitem["ro"]) != 0:
             print("before pop\n")
             listy.append(firstitem)
             firstitem = listy[0]
             listy.pop(0)
-            print(listy)
-            print("\n")
-            print(stulist)
-            print("\n")
         for k in range(0, b):
             if len(firstitem["ro"]) == 0:
                 if len(listy) == 0:
                     break
-                print("before pop\n")
                 firstitem = listy[0]
                 listy.pop(0)
-                print(listy)
-                print("\n")
-                print(stulist)
-                print("\n")
             i["b"].append(firstitem["ro"][0])
-            print("before pop\n")
             firstitem["ro"].pop(0)
-            print(listy)
-            print("\n")
-            print(stulist)
-            print("\n")
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)
-            print(listy)
-            print("\n")
-            print(stulist)
-            print("\n")
     newlist=list(stulist)
-    print("this is newlist")
-    print(newlist) 
-    return list(stulist)
+    return newlist
+    
 
 @app.route('/student', methods=["POST"])
 def details():
-    roll=request.data
-    print(roll)
+    roll=request.form["rollnum"]
+    print(newlist)
     return roll
     
 
