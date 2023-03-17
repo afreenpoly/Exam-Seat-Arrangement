@@ -120,7 +120,17 @@ def seating():
             print("\n")
             print(stulist)
             print("\n")
+    newlist=list(stulist)
+    print("this is newlist")
+    print(newlist) 
     return list(stulist)
+
+@app.route('/student', methods=["POST"])
+def details():
+    roll=request.data
+    print(roll)
+    return roll
+    
 
 
 if __name__ == "__main__":
