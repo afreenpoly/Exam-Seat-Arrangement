@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Student Portal</title>
+        <title>Student</title>
     </head>
     <body>
-        <div class="container">
-            <form action="/student" method="POST">
-              <div class="form-group">
-                <label>Roll No</label>
-                <input name="rollnum" type="text" class="form-control" />
-                <input id="submitbutton" name="" type="submit" />
-              </div>
-            </form>
-          </div>
+        <h1>Student Page</h1>
+        <form action="/student" method="POST">
+            Roll Number: <input type="number" name="roll_number" /><br />
+            <input type="submit" value="Submit" />
+        </form>
+        {% if roll_num %}
+            <p>Roll Number: {{roll_num}}</p>
+        {% endif %}
     </body>
 </html>
-
-  

@@ -1,64 +1,114 @@
-from math import ceil
-from flask import Flask, render_template, request
+from flask import Flask, flash, render_template, request, redirect, url_for
+from converter import excel_to_json
+import os
+import math
 import json
-import pandas as pd
+import pymongo
+from werkzeug.utils import secure_filename
+
 app = Flask(__name__)
+app.debug = True
+app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\tes\uploads'
 
-stufiles = open("studetails.txt", "r")
-stulist = json.load(stufiles)
-listy = []
-newlist=[]
-
-@app.route("/")
-def hi():
-    return render_template("home.html")
+client = pymongo.MongoClient("mongodb://localhost:27017")
+db = client.Studetails
+collections = db.student
 
 
-@app.route('/submit', methods=["POST"])
-def home1():
-    dict = request.form
-    stulist.append(dict)
-    stufile = open("studetails.txt", "w")
-    json.dump(stulist, stufile)
-    stufile.close()
-    return stulist
+@app.route('/')
+def index():
+    return redirect(url_for('home'))
 
 
-@app.route('/data', methods=["GET"])
-def data():
-    studata = open("Test.csv", "r")
-    exams = []
-    while True:
-        line = studata.readline()
-        if not line:
-            break
-        ligma = line.replace('\n', '').split(',')
-        if not ligma[2] in exams:
-            exams.append(ligma[2])
-            dict = {'name': ligma[2], 'ro': []}
-            listy.append(dict)
-    studata.seek(0)
-    while True:
-        line = studata.readline()
-        if not line:
-            break
-        ligma = line.replace('\n', '').split(',')
-        for d in listy:
-            if d['name'] == ligma[2]:
-                d['ro'].append(ligma[0])
-    return listy
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 
-@app.route('/seating', methods=["GET"])
+@app.route('/student', methods=['GET', 'POST'])
+def student():
+    if request.method == 'POST':
+        roll = request.form['roll_number']
+        return render_template('student.html', roll_num=roll)
+    else:
+        return render_template('student.html')
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    if file.filename:
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        data = excel_to_json(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename))
+        collections.delete_many({})
+        collections.insert_many(data)
+    else:
+        data = None
+    return render_template('uploads.html', data=data)
+
+
+@app.route('/details', methods=['POST'])
+def details():
+    option = request.form.get('dropdown')
+    if option == '0':
+        return "Error: Please select a Class"
+    elif option == '1' or option == '2':
+        seats = 40
+    elif option == '3':
+        seats = 150
+    elif option == '4':
+        seats = 140
+    elif option == '5' or option == '6':
+        seats = 50
+    else:
+        seats = 0
+    noofclass = request.form.get('noofclass')
+    if not noofclass:
+        return "Error: Please enter a value for Number of Class"
+    noofclass = int(noofclass)
+    totalseats = noofclass * seats
+    max_rows = 3
+    max_columns = 7
+    seats_per_bench = 2
+    columns = min(max_columns, (totalseats + (seats_per_bench *
+                  max_rows) - 1) // (seats_per_bench * max_rows))
+    rows = min(max_rows, (totalseats + seats_per_bench - 1) // seats_per_bench)
+    data = []
+    for i in range(noofclass):
+        data.append({"column": str(columns),
+                    "rows": str(rows), "a": [], "b": []})
+    with open('stuarrange.txt', 'w') as f:
+        json.dump(data, f, indent=4)
+    return render_template('classdetails.html', seats=seats,
+                           noofclass=noofclass, totalseats=totalseats, rows=rows, cols=columns)
+
+
+@app.route('/seating', methods=['GET'])
 def seating():
-    k = 0
+    listy = []
+    with open('stuarrange.txt', 'r') as stufiles:
+        stulist = json.load(stufiles)
+    data = collections.aggregate(
+        [{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
+    for i in data:
+        listy.append(i)
+        k = 0
     for i in stulist:
         if len(listy) == 0:
             break
-        a = ceil(int(i["column"])/2)*int(i["rows"])
+        a = math.ceil(int(i["column"])/2)*int(i["rows"])
         b = (int(i["column"])*int(i["rows"]))-a
         firstitem = listy[0]
         listy.pop(0)
+        firstitem["ro"] = sorted(firstitem["ro"])
         if len(firstitem["ro"]) == 0:
             continue
         for j in range(0, a):
@@ -70,7 +120,6 @@ def seating():
             i["a"].append(firstitem["ro"][0])
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
-            print("before pop\n")
             listy.append(firstitem)
             firstitem = listy[0]
             listy.pop(0)
@@ -85,17 +134,11 @@ def seating():
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)
     global newlist
-    newlist=list(stulist)
-    return newlist
-    
-
-@app.route('/student', methods=["POST"])
-def details():
-    roll=request.form["rollnum"]
-    print(newlist)
-    return roll
-    
+    newlist = list(stulist)
+    with open('stuarrange.txt', 'w') as f:
+        json.dump(newlist, f, indent=4)
+    return render_template('seating.html', newlist=newlist)
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+if __name__ == '__main__':
+    app.run()

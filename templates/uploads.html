@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Uploades</title>
+  </head>
+  <body>
+    <h1>Succesfully Uploaded</h1>
+    {% if data %}
+      {% for i in data %}
+      {{i}} <br>
+      {% endfor %}
+    {% endif %}
+  </body>
+</html>

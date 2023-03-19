@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Seating</title>
+  </head>
+  <body>
+    <!-- <table>
+      <tr>
+        <th>A</th>
+        <th>B</th>
+      </tr>
+      {% for i in range(7) %}
+      <tr> 
+        {% for j in range(3) %}
+          {% if (i*3+j) < newlist|length %}
+            {% set item = newlist[i*3+j] %}
+            <td>{{ item.a }}</td> 
+            <td>{{ item.b }}</td> 
+          {% else %}
+            <td></td> 
+            <td></td> 
+          {% endif %} 
+        {% endfor %} 
+      </tr> 
+      {% endfor %} 
+    </table>  -->
+    {{newlist}}
+  </body>
+</html>
