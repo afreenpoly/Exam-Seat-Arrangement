@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect, url_for,jsonify
 from converter import excel_to_json
 import os
 import math
@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.debug = True
-app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\tes\uploads'
+app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\uploads'
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client.Studetails
@@ -96,8 +96,9 @@ def seating():
     listy = []
     with open('stuarrange.txt', 'r') as stufiles:
         stulist = json.load(stufiles)
-    data = collections.aggregate(
-        [{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
+    data = collections.aggregate([
+        {"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}
+    ])
     for i in data:
         listy.append(i)
         k = 0
