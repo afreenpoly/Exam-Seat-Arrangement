@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>Home</title>
   </head>
   <body>
     <form action="/details" method="POST">
-      Type of class:
-      <select name="dropdown">
+      <label for="dropdown">Type of class:</label>
+      <select name="dropdown" id="dropdown">
         <option value="0" selected>-select-</option>
         <option value="1">ADM Classrooms</option>
         <option value="2">Classrooms</option>
@@ -15,13 +16,13 @@
         <option value="5">Drawing Hall</option>
         <option value="6">Seminar Hall EC</option>
       </select>
-      Number of Class:
-      <input type="number" name="noofclass" /><br />
+      <label for="noofclass">Number of Class:</label>
+      <input type="number" name="noofclass" id="noofclass" placeholder="Enter a number"/><br />
       <input type="submit" value="Submit" />
     </form>
     <form action="/upload" method="POST" enctype="multipart/form-data">
-      Select Excel file to upload:
-      <input type="file" name="file" accept=".xls,.xlsx" /><br /><br />
+      <label for="file">Select Excel file to upload:</label>
+      <input type="file" name="file" id="file" accept=".xls,.xlsx" multiple /><br /><br />
       <input type="submit" value="Upload File" />
     </form>
     <a href="/student">Go to Student Page</a>
