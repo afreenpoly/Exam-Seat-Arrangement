@@ -22,6 +22,7 @@ def index():
 
 @app.route('/home')
 def home():
+    collections.delete_many({})
     return render_template('home.html')
 
 
@@ -103,34 +104,43 @@ def seating():
         listy.append(i)
         k = 0
     for i in stulist:
+        i["a"] = []
+        i["b"] = []
         if len(listy) == 0:
             break
         a = math.ceil(int(i["column"])/2)*int(i["rows"])
         b = (int(i["column"])*int(i["rows"]))-a
         firstitem = listy[0]
+        idlist = []
+        idlist.append(firstitem["_id"])
         listy.pop(0)
-        firstitem["ro"] = sorted(firstitem["ro"])
-        if len(firstitem["ro"]) == 0:
-            continue
         for j in range(0, a):
             if len(firstitem["ro"]) == 0:
                 if len(listy) == 0:
                     break
                 firstitem = listy[0]
+                idlist.append(firstitem["_id"])
                 listy.pop(0)
             i["a"].append(firstitem["ro"][0])
+            collections.update_one({"rollnum": firstitem["ro"][0]}, {"$set": {"seat no":"a" + str(len(i["a"]))}})
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)
-            firstitem = listy[0]
-            listy.pop(0)
+        firstitem = listy[0]
+        listy.pop(0)
+        if firstitem["_id"] in idlist:
+            continue
         for k in range(0, b):
             if len(firstitem["ro"]) == 0:
                 if len(listy) == 0:
                     break
                 firstitem = listy[0]
+                if firstitem["_id"] in idlist:
+                    break
                 listy.pop(0)
             i["b"].append(firstitem["ro"][0])
+            collections.update_one({"rollnum": firstitem["ro"][0]}, {
+                                   "$set": {"seat no": "b" + str(len(i["b"]))}})
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)
