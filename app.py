@@ -85,8 +85,8 @@ def details():
         return "Error: Please enter a value for Number of Class"
     noofclass = int(noofclass)
     totalseats = noofclass * seats
-    max_rows = 3
-    max_columns = 7
+    max_rows = 7
+    max_columns = 3
     seats_per_bench = 2
     columns = min(max_columns, (totalseats + (seats_per_bench *
                   max_rows) - 1) // (seats_per_bench * max_rows))
