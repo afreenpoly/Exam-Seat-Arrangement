@@ -14,6 +14,7 @@ client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client.Studetails
 collections = db.student
 
+listy=[]
 
 @app.route('/')
 def index():
@@ -22,7 +23,6 @@ def index():
 
 @app.route('/home')
 def home():
-    collections.delete_many({})
     return render_template('home.html')
 
 
@@ -51,6 +51,12 @@ def upload_file():
             app.config['UPLOAD_FOLDER'], filename))
         collections.delete_many({})
         collections.insert_many(data)
+        global listy
+        listy=[]
+        data=[]
+        data = collections.aggregate([{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
+        for i in data:
+            listy.append(i)
     else:
         data = None
     return render_template('uploads.html', data=data)
@@ -94,15 +100,8 @@ def details():
 
 @app.route('/seating', methods=['GET'])
 def seating():
-    listy = []
     with open('stuarrange.txt', 'r') as stufiles:
         stulist = json.load(stufiles)
-    data = collections.aggregate([
-        {"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}
-    ])
-    for i in data:
-        listy.append(i)
-        k = 0
     for i in stulist:
         i["a"] = []
         i["b"] = []
@@ -128,23 +127,20 @@ def seating():
             listy.append(firstitem)
         firstitem = listy[0]
         listy.pop(0)
-        if firstitem["_id"] in idlist:
-            continue
         for k in range(0, b):
             if len(firstitem["ro"]) == 0:
                 if len(listy) == 0:
                     break
                 firstitem = listy[0]
-                if firstitem["_id"] in idlist:
-                    break
                 listy.pop(0)
+            if firstitem["_id"] in idlist:
+                break
             i["b"].append(firstitem["ro"][0])
             collections.update_one({"rollnum": firstitem["ro"][0]}, {
                                    "$set": {"seat no": "b" + str(len(i["b"]))}})
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)
-    global newlist
     newlist = list(stulist)
     with open('stuarrange.txt', 'w') as f:
         json.dump(newlist, f, indent=4)
