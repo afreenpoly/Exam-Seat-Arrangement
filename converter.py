@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 
+
 def excel_to_json(excel_file):
     # Load the Excel file into a Pandas DataFrame
     df = pd.read_excel(excel_file)
@@ -11,5 +12,5 @@ def excel_to_json(excel_file):
     # Load the JSON string into a Python dictionary
     data = json.loads(json_str)
     # Return the dictionary
-    
+
     return data

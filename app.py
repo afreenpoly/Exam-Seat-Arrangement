@@ -6,16 +6,25 @@ import json
 import pymongo
 from werkzeug.utils import secure_filename
 
+# configuring flask
+
 app = Flask(__name__)
 app.debug = True
 app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\uploads'
+
+# configuring mongodb
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client.Studetails
 collections = db.student
 
+# global variables
+
 listy = []
 filled = False
+
+# routes
+
 
 @app.route('/')
 def index():
@@ -51,7 +60,9 @@ def upload_file():
         data = excel_to_json(os.path.join(
             app.config['UPLOAD_FOLDER'], filename))
         collections.delete_many({})
-        collections.insert_many(data)
+        collections.insert_many([
+            {**item, "seatnum": None, "classroom": None} for item in data
+        ])
         global listy
         listy = []
         details = []
@@ -62,7 +73,6 @@ def upload_file():
     else:
         data = None
     return render_template('uploads.html', data=data)
-
 
 
 @app.route('/details', methods=['POST'])
@@ -98,7 +108,7 @@ def details():
     with open('stuarrange.txt', 'w') as f:
         json.dump(data, f, indent=4)
     global filled
-    filled=False
+    filled = False
     return render_template('classdetails.html', seats=seats,
                            noofclass=noofclass, totalseats=totalseats, rows=rows, cols=columns)
 
@@ -132,12 +142,12 @@ def seating():
                 listy.pop(0)
             i["a"].append(firstitem["ro"][0])
             collections.update_one({"rollnum": firstitem["ro"][0]}, {
-                                   "$set": {"seat no": "a" + str(len(i["a"]))}})
+                                   "$set": {"seatnum": "a" + str(len(i["a"]))}})
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)
         if len(listy) == 0:
-                break
+            break
         firstitem = listy[0]
         listy.pop(0)
         for k in range(0, b):
@@ -157,7 +167,7 @@ def seating():
     newlist = list(stulist)
     with open('stuarrange.txt', 'w') as f:
         json.dump(newlist, f, indent=4)
-    filled=True
+    filled = True
     return render_template('seating.html', newlist=newlist)
 
 
