@@ -103,7 +103,6 @@ def details():
                            noofclass=noofclass, totalseats=totalseats, rows=rows, cols=columns)
 
 
-
 @app.route('/seating', methods=['GET'])
 def seating():
     global filled
