@@ -19,7 +19,6 @@ db = client.Studetails
 collections = db.student
 
 # global variables
-
 listy = []
 filled = False
 
@@ -57,12 +56,15 @@ def upload_file():
     if file.filename:
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        global data
         data = excel_to_json(os.path.join(
             app.config['UPLOAD_FOLDER'], filename))
-        collections.delete_many({})
-        collections.insert_many([
-            {**item, "seatnum": None, "classroom": None} for item in data
-        ])
+        if data is not None:
+            collections.delete_many({})
+            for sheet_name, sheet_data in data.items():
+                collections.insert_many([
+                    {**item, "sheet_name": sheet_name, "seatnum": None, "classroom": None} for item in sheet_data
+                ])
         global listy
         listy = []
         details = []
@@ -73,6 +75,11 @@ def upload_file():
     else:
         data = None
     return render_template('uploads.html', data=data)
+
+
+@app.route('/displaydata', methods=['GET'])
+def display_data():
+    return render_template('displaydata.html', data=data)
 
 
 @app.route('/details', methods=['POST'])

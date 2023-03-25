@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Uploades</title>
+  </head>
+  <body>
+    <h1>Succesfully Uploaded</h1>
+    {% if data %}
+      {% for sheet_name, sheet_data in data.items() %}
+        <h2>{{ sheet_name }}</h2>
+        <table>
+          <thead>
+            <tr>
+              {% for column_name in sheet_data[0] %}
+                <th>{{ column_name }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in sheet_data %}
+              <tr>
+                {% for column_value in row.values() %}
+                  <td>{{ column_value }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endfor %}
+    {% endif %}
+  </body>
+</html>
