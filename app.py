@@ -43,7 +43,7 @@ def student():
         student_data = collections.find_one({'rollnum': int(roll)})
         seatnum = None
         if student_data is not None:
-         seatnum = student_data['seatnum']
+            seatnum = student_data['seatnum']
         return render_template('student.html', roll_num=roll, seat_num=seatnum)
     else:
         return render_template('student.html')
@@ -89,17 +89,28 @@ def display_data():
 
 @app.route('/details', methods=['POST'])
 def details():
+    class_name = ""
     option = request.form.get('dropdown')
     if option == '0':
         return "Error: Please select a Class"
-    elif option == '1' or option == '2':
+    elif option == '1':
         seats = 40
+        class_name = request.form.get('admClassDropdown')
+    elif option == '2':
+        seats = 40
+        class_name = request.form.get('classDropdown')
     elif option == '3':
         seats = 150
+        class_name = request.form.get('commonexmdrop')
     elif option == '4':
         seats = 140
-    elif option == '5' or option == '6':
+        class_name = request.form.get('commexmdrop')
+    elif option == '5':
         seats = 50
+        class_name = request.form.get('drawdrop')
+    elif option == '6':
+        seats = 50
+        class_name = request.form.get('commonexmdrop2')
     else:
         seats = 0
     noofclass = request.form.get('noofclass')
