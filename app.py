@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, jsonify
+from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session
 from converter import excel_to_json
 import os
 import math
@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.debug = True
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\uploads'
 
 # configuring mongodb
@@ -38,8 +39,12 @@ def home():
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     if request.method == 'POST':
-        roll = request.form['roll_number']
-        return render_template('student.html', roll_num=roll)
+        roll = request.form['roll_num']
+        student_data = collections.find_one({'rollnum': int(roll)})
+        seatnum = None
+        if student_data is not None:
+         seatnum = student_data['seatnum']
+        return render_template('student.html', roll_num=roll, seat_num=seatnum)
     else:
         return render_template('student.html')
 
@@ -47,12 +52,12 @@ def student():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
+        flash('Error: No file part')
+        return redirect(url_for('home'))
     file = request.files['file']
     if file.filename == '':
         flash('No selected file')
-        return redirect(request.url)
+        return redirect(url_for('home'))
     if file.filename:
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -103,7 +108,7 @@ def details():
     noofclass = int(noofclass)
     totalseats = noofclass * seats
     max_rows = 7
-    max_columns = 3
+    max_columns = 6
     seats_per_bench = 2
     columns = min(max_columns, (totalseats + (seats_per_bench *
                   max_rows) - 1) // (seats_per_bench * max_rows))
@@ -167,7 +172,7 @@ def seating():
                 break
             i["b"].append(firstitem["ro"][0])
             collections.update_one({"rollnum": firstitem["ro"][0]}, {
-                                   "$set": {"seat no": "b" + str(len(i["b"]))}})
+                                   "$set": {"seatnum": "b" + str(len(i["b"]))}})
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
             listy.append(firstitem)

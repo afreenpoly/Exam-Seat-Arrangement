@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Student</title>
-    </head>
+  <head>
+    <title>Student</title>
+  </head>
     <body>
-        <h1>Student Page</h1>
-        <form action="/student" method="POST">
-            Roll Number: <input type="number" name="roll_number" /><br />
-            <input type="submit" value="Submit" />
-        </form>
-        {% if roll_num %}
-            <p>Roll Number: {{roll_num}}</p>
-        {% endif %}
+      <h1>Student Page</h1>
+      <form action="/student" method="POST">
+        <label for="roll_num">Roll Number:</label>
+        <input type="number" name="roll_num" id="roll_num" />
+        <input type="submit" value="Submit">
+      </form>
+      {% if roll_num %}
+      <p>Roll Number: {{roll_num}}</p>
+      <p>Seat Number: {{seat_num}}</p>
+      {% endif %}
     </body>
 </html>

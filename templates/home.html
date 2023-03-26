@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Home</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
   </head>
   <body>
     <form action="/details" method="POST">
@@ -11,21 +15,119 @@
         <option value="0" selected>-select-</option>
         <option value="1">ADM Classrooms</option>
         <option value="2">Classrooms</option>
-        <option value="3">Common Exam Hall</option>
-        <option value="4">Common Exam Hall2</option>
+        <option value="3">Common Exam Hall(150)</option>
+        <option value="4">Common Exam Hall(140)</option>
         <option value="5">Drawing Hall</option>
         <option value="6">Seminar Hall EC</option>
       </select>
+
+      <div id="admClasses" class="hidden">
+        <label for="admClassDropdown">ADM Class:</label>
+        <select name="admClassDropdown" id="admClassDropdown">
+          <option value="0" selected>-select-</option>
+          <option value="ADM1">ADM 303</option>
+          <option value="ADM2">ADM 304</option>
+          <option value="ADM3">ADM 305</option>
+          <option value="ADM4">ADM 306</option>
+          <option value="ADM5">ADM 307</option>
+          <option value="ADM6">ADM 308</option>
+          <option value="ADM7">ADM 309</option>
+          <option value="ADM8">ADM 310</option>
+        </select>
+      </div>
+
+      <div id="classrooms" class="hidden">
+        <label for="classDropdown">Classroom:</label>
+        <select name="classDropdown" id="classDropdown">
+          <option value="0" selected>-select-</option>
+          <option value="C1">EAB 407</option>
+          <option value="C2">EAB 106</option>
+          <option value="C3">EAB 206</option>
+          <option value="C4">EAB 306</option>
+          <option value="C5">EAB 401</option>
+          <option value="C6">WAB 107</option>
+          <option value="C7">WAB 207</option>
+          <option value="C8">EAB 405</option>
+          <option value="C9">EAB 304</option>
+          <option value="C10">EAB 303</option>
+          <option value="C11">EAB 104</option>
+          <option value="C12">EAB 103</option>
+          <option value="C13">EAB 203</option>
+          <option value="C14">EAB 204</option>
+          <option value="C15">WAB 206</option>
+          <option value="C16">WAB 105</option>
+          <option value="C17">WAB 106</option>
+          <option value="C18">WAB 212</option>
+          <option value="C19">WAB 210</option>
+          <option value="C20">WAB 211</option>
+          <option value="C21">WAB 205</option>
+          <option value="C22">WAB 305</option>
+          <option value="C23">WAB 303</option>
+          <option value="C24">WAB 403</option>
+          <option value="C25">WAB 405</option>
+        </select>
+      </div>
+
+      <div id="commexmhall" class="hidden">
+        <label for="commonexmdrop">Common Exam Hall</label>
+        <select name="commonexmdrop" id="commonexmdrop">
+          <option value="0" selected>-select-</option>
+          <option value="ADM1">EAB 415</option>
+        </select>
+      </div>
+
+      <div id="commonexmhall" class="hidden">
+        <label for="commexmdrop">Common Exam Hall</label>
+        <select name="commexmdrop" id="commexmdrop">
+          <option value="0" selected>-select-</option>
+          <option value="ADM1">EAB 416</option>
+        </select>
+      </div>
+
+      <div id="drawhall" class="hidden">
+        <label for="drawdrop">Drawing Hall </label>
+        <select name="drawdrop" id="drawdrop">
+          <option value="0" selected>-select-</option>
+          <option value="ADM1">WAB 412</option>
+        </select>
+      </div>
+
+      <div id="semhall" class="hidden">
+        <label for="commonexmdrop2">Seminar Hall EC</label>
+        <select name="commonexmdrop2" id="commonexmdrop2">
+          <option value="0" selected>-select-</option>
+          <option value="ADM1">EAB 310</option>
+        </select>
+      </div>
+
       <label for="noofclass">Number of Class:</label>
-      <input type="number" name="noofclass" id="noofclass" placeholder="Enter a number"/><br />
+      <input
+        type="number"
+        name="noofclass"
+        id="noofclass"
+        placeholder="Enter a number"
+      /><br />
       <input type="submit" value="Submit" />
     </form>
     <form action="/upload" method="POST" enctype="multipart/form-data">
       <label for="file">Select Excel file to upload:</label>
-      <input type="file" name="file" id="file" accept=".xls,.xlsx" multiple /><br /><br />
+      <input
+        type="file"
+        name="file"
+        id="file"
+        accept=".xls,.xlsx"
+        multiple
+      /><br /><br />
       <input type="submit" value="Upload File" />
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <p class="flashes">
+        {% for message in messages %} {{ message }} {% endfor %}
+      </p>
+      {% endif %} {% endwith %}
     </form>
     <a href="/student">Go to Student Page</a>
     <a href="/seating" target="_blank">Go to Seating Arrangement</a>
+
+    <script src="{{ url_for('static', filename='home.js') }}"></script>
   </body>
 </html>
