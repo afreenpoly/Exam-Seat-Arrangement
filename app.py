@@ -17,8 +17,8 @@ app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\upload
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client.Studetails
-collections = db.student
-
+usercollections = db.users
+stucollections = db.student
 # global variables
 listy = []
 filled = False
@@ -28,19 +28,56 @@ filled = False
 
 @app.route('/')
 def index():
-    return redirect(url_for('home'))
-
-
-@app.route('/home')
-def home():
     return render_template('home.html')
+
+
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def login():
+	if request.method == 'POST':
+		username = request.form['username']
+		password = request.form['password']
+		user = usercollections.find_one({'username': username, 'password': password})
+		if user:
+			session['username'] = username
+			flash('Login successful!', 'success')
+			return redirect(url_for('admin'))
+		else:
+			flash('Invalid username or password', 'error')
+			return redirect(url_for('login'))
+	else:
+		return render_template('adminlogin.html')
+
+
+@app.route('/admin/register', methods=['GET', 'POST'])
+def register():
+	if request.method == 'POST':
+		username = request.form['username']
+		password = request.form['password']
+		if usercollections.find_one({'username': username}):
+			flash('Username already exists', 'error')
+			return redirect(url_for('register'))
+		else:
+			usercollections.insert_one({'username': username, 'password': password})
+			flash('Registration successful!', 'success')
+			return redirect(url_for('login'))
+	else:
+		return render_template('home.html')
+
+
+
 
 
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     if request.method == 'POST':
         roll = request.form['roll_num']
-        student_data = collections.find_one({'rollnum': int(roll)})
+        student_data = stucollections.find_one({'rollnum': int(roll)})
         seatnum = None
         if student_data is not None:
             seatnum = student_data['seatnum']
@@ -53,11 +90,11 @@ def student():
 def upload_file():
     if 'file' not in request.files:
         flash('Error: No file part')
-        return redirect(url_for('home'))
+        return redirect(url_for('admin'))
     file = request.files['file']
     if file.filename == '':
         flash('No selected file')
-        return redirect(url_for('home'))
+        return redirect(url_for('admin'))
     if file.filename:
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -65,15 +102,15 @@ def upload_file():
         data = excel_to_json(os.path.join(
             app.config['UPLOAD_FOLDER'], filename))
         if data is not None:
-            collections.delete_many({})
+            stucollections.delete_many({})
             for sheet_name, sheet_data in data.items():
-                collections.insert_many([
+                stucollections.insert_many([
                     {**item, "sheet_name": sheet_name, "seatnum": None, "classroom": None} for item in sheet_data
                 ])
         global listy
         listy = []
         details = []
-        details = collections.aggregate(
+        details = stucollections.aggregate(
             [{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
         for i in details:
             listy.append(i)
@@ -164,7 +201,7 @@ def seating():
                 idlist.append(firstitem["_id"])
                 listy.pop(0)
             i["a"].append(firstitem["ro"][0])
-            collections.update_one({"rollnum": firstitem["ro"][0]}, {
+            stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                                    "$set": {"seatnum": "a" + str(len(i["a"]))}})
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
@@ -182,7 +219,7 @@ def seating():
             if firstitem["_id"] in idlist:
                 break
             i["b"].append(firstitem["ro"][0])
-            collections.update_one({"rollnum": firstitem["ro"][0]}, {
+            stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                                    "$set": {"seatnum": "b" + str(len(i["b"]))}})
             firstitem["ro"].pop(0)
         if len(firstitem["ro"]) != 0:
