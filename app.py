@@ -68,7 +68,7 @@ def register():
 			flash('Registration successful!', 'success')
 			return redirect(url_for('login'))
 	else:
-		return render_template('home.html')
+		return render_template('adminlogin.html')
 
 
 
