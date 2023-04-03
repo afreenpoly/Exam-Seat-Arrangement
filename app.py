@@ -1,4 +1,5 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session
+
 from converter import excel_to_json
 import os
 import math
@@ -126,7 +127,8 @@ def display_data():
 
 @app.route('/details', methods=['POST'])
 def details():
-    class_name = ""
+    global class_name 
+    class_name= ""
     option = request.form.get('dropdown')
     if option == '0':
         return "Error: Please select a Class"
@@ -164,7 +166,7 @@ def details():
     data = []
     for i in range(noofclass):
         data.append({"column": str(columns),
-                    "rows": str(rows), "a": [], "b": []})
+                    "rows": str(rows), "a": [], "b": [], "class_name": class_name})
     with open('stuarrange.txt', 'w') as f:
         json.dump(data, f, indent=4)
     global filled

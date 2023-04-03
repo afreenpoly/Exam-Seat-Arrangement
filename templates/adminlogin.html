@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Admin Page</title>
-</head>
-<body>
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			<ul class="flashes">
-			{% for message in messages %}
-				<li>{{ message }}</li>
-			{% endfor %}
-			</ul>
-		{% endif %}
-	{% endwith %}
-	<h1>Admin Login</h1>
-	<form method="POST" action="{{ url_for('login') }}">
-		<label>Username:</label>
-		<input type="text" name="username"><br>
-		<label>Password:</label>
-		<input type="password" name="password"><br>
-		<input type="submit" value="Login">
-	</form>
-	
-	<h1>Register</h1>
-	<form method="POST" action="{{ url_for('register') }}">
-		<label>Username:</label>
-		<input type="text" name="username"><br>
-		<label>Password:</label>
-		<input type="password" name="password"><br>
-		<input type="submit" value="Register">
-	</form>
-</body>
+  <head>
+    <title>Admin Page</title>
+  </head>
+  <body>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+    <h1>Admin Login</h1>
+    <form method="POST" action="{{ url_for('login') }}">
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        name="username"
+        id="username"
+        placeholder="Enter your username"
+      /><br />
+
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Enter your password"
+      /><br />
+
+      <input type="submit" value="Login" />
+    </form>
+
+    <h1>Register</h1>
+    <form method="POST" action="{{ url_for('register') }}">
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        name="username"
+        id="username-field"
+        placeholder="Enter your username"
+      /><br />
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        name="password"
+        id="password-field"
+        placeholder="Enter your password"
+      /><br />
+      <input type="submit" value="Register" />
+    </form>
+  </body>
 </html>
