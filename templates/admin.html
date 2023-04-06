@@ -10,7 +10,17 @@
   </head>
   <body>
     <form action="/details" method="POST">
-      <label for="dropdown">Type of class:</label>
+      <label for="noofclass">Number of Type of Class:</label>
+      <input
+        type="number"
+        name="noofclass"
+        id="noofclass"
+        placeholder="Enter a number"
+      /><br />
+
+      
+
+      <label for="dropdown">Type of class:<br></label>
       <select name="dropdown" id="dropdown">
         <option value="0" selected>-select-</option>
         <option value="1">ADM Classrooms</option>
@@ -20,14 +30,9 @@
         <option value="5">Drawing Hall</option>
         <option value="6">Seminar Hall EC</option>
       </select>
-
-      <label for="noofclass">Number of Class:</label>
-      <input
-        type="number"
-        name="noofclass"
-        id="noofclass"
-        placeholder="Enter a number"
-      /><br />
+      
+      <div id="dropdowns-container"></div>
+      <br>
 
       <div id="admClasses" class="hidden">
         <label>ADM Class:</label>
@@ -202,25 +207,9 @@
       
       <input type="submit" value="Submit" />
     </form>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-      <label for="file">Select Excel file to upload:</label>
-      <input
-        type="file"
-        name="file"
-        id="file"
-        accept=".xls,.xlsx"
-        multiple
-      /><br /><br />
-      <input type="submit" value="Upload File" />
-      {% with messages = get_flashed_messages() %} {% if messages %}
-      <p class="flashes">
-        {% for message in messages %} {{ message }} {% endfor %}
-      </p>
-      {% endif %} {% endwith %}
-    </form>
-
-    <a href="/seating" target="_blank">Go to Seating Arrangement</a>
-
+    <br>
+    <a href="/seating" target="_blank">Seating Arrangement</a><br>
+    <a href="/uploadpage" target="_blank">Upload Data</a>
     <script src="{{ url_for('static', filename='home.js') }}"></script>
   </body>
 </html>

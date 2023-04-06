@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <title>File Upload</title>
+</head>
+<body>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <label for="file">Select Excel file to upload:</label>
+      <input
+        type="file"
+        name="file"
+        id="file"
+        accept=".xls,.xlsx"
+        multiple
+      /><br /><br />
+      <input type="submit" value="Upload File" />
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <p class="flashes">
+        {% for message in messages %} {{ message }} {% endfor %}
+      </p>
+      {% endif %} {% endwith %}
+    </form>
+</body>
+</html>

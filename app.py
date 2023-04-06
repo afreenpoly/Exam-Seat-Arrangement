@@ -46,10 +46,8 @@ def login():
 		user = usercollections.find_one({'username': username, 'password': password})
 		if user:
 			session['username'] = username
-			flash('Login successful!', 'success')
 			return redirect(url_for('admin'))
 		else:
-			flash('Invalid username or password', 'error')
 			return redirect(url_for('login'))
 	else:
 		return render_template('adminlogin.html')
@@ -123,6 +121,11 @@ def upload_file():
 @app.route('/displaydata', methods=['GET'])
 def display_data():
     return render_template('displaydata.html', data=data)
+
+
+@app.route('/uploadpage', methods=['GET'])
+def uploadpage():
+    return render_template('uploadpage.html')
 
 
 @app.route('/details', methods=['POST'])
