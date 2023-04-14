@@ -1,5 +1,5 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session
-
+from datetime import datetime
 from converter import excel_to_json
 import os
 import math
@@ -23,6 +23,7 @@ stucollections = db.student
 # global variables
 listy = []
 filled = False
+dates = []
 
 # routes
 
@@ -85,27 +86,51 @@ def student():
         return render_template('student.html')
 
 
+@app.route('/uploaddata', methods=['GET'])
+def uploadpage():
+    return render_template('uploadpage.html')
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
+    if 'file2' not in request.files or 'file3' not in request.files or 'file4' not in request.files:
         flash('Error: No file part')
         return redirect(url_for('admin'))
-    file = request.files['file']
-    if file.filename == '':
+    file2 = request.files['file2']
+    file3 = request.files['file3']
+    file4 = request.files['file4']
+    if file2.filename == '' or file3.filename == '' or file4.filename == '':
         flash('No selected file')
         return redirect(url_for('admin'))
-    if file.filename:
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        global data
-        data = excel_to_json(os.path.join(
-            app.config['UPLOAD_FOLDER'], filename))
-        if data is not None:
+    if file2.filename and file3.filename and file4.filename:
+        filename2 = secure_filename(file2.filename)
+        filename3 = secure_filename(file3.filename)
+        filename4 = secure_filename(file4.filename)
+        file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+        file3.save(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
+        file4.save(os.path.join(app.config['UPLOAD_FOLDER'], filename4))
+
+        global data2,data3,data4
+        data2 = excel_to_json(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename2))
+        data3 = excel_to_json(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
+        data4 = excel_to_json(os.path.join(app.config['UPLOAD_FOLDER'], filename4))
+        if data2 is not None and data3 is not None and data4 is not None:
             stucollections.delete_many({})
-            for sheet_name, sheet_data in data.items():
+            for sheet_name, sheet_data in data2.items():
                 stucollections.insert_many([
-                    {**item, "sheet_name": sheet_name, "seatnum": None, "classroom": None} for item in sheet_data
-                ])
+                    {**item, "sheet_name": sheet_name, "Year": filename2.split("Students")[0], "seatnum": None,
+                     "classroom": None} for item in sheet_data
+            ])
+            for sheet_name, sheet_data in data3.items():
+                stucollections.insert_many([
+                    {**item, "sheet_name": sheet_name, "Year": filename3.split("Students")[0], "seatnum": None,
+                     "classroom": None} for item in sheet_data
+            ])
+            for sheet_name, sheet_data in data4.items():
+                stucollections.insert_many([
+                    {**item, "sheet_name": sheet_name, "Year": filename4.split("Students")[0], "seatnum": None,
+                     "classroom": None} for item in sheet_data
+            ])
         global listy
         listy = []
         details = []
@@ -114,19 +139,112 @@ def upload_file():
         for i in details:
             listy.append(i)
     else:
-        data = None
-    return render_template('uploads.html', data=data)
+        data2 = data3 = data4 = None
+    return render_template('uploads.html', data2=data2, data3=data3, data4=data4)
 
 
 @app.route('/displaydata', methods=['GET'])
 def display_data():
-    return render_template('displaydata.html', data=data)
+    return render_template('displaydata.html', data2=data2, data3=data3, data4=data4)
 
 
-@app.route('/uploadpage', methods=['GET'])
-def uploadpage():
-    return render_template('uploadpage.html')
+@app.route('/timetable', methods=['GET', 'POST'])
+def timetable():
+    if request.method == 'POST':
+        file2 = request.files['file2']
+        file3 = request.files['file3']
+        file4 = request.files['file4']
+        
+        # Check if file2 is uploaded
+        if file2.filename:
+            filename2 = secure_filename(file2.filename)
+            file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+            global timetable2
+            timetable2 = excel_to_json(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename2))
 
+        # Check if file3 is uploaded
+        if file3.filename:
+            filename3 = secure_filename(file3.filename)
+            file3.save(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
+            global timetable3
+            timetable3 = excel_to_json(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename3))
+
+        # Check if file4 is uploaded
+        if file4.filename:
+            filename4 = secure_filename(file4.filename)
+            file4.save(os.path.join(app.config['UPLOAD_FOLDER'], filename4))
+            global timetable4
+            timetable4 = excel_to_json(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename4))
+            
+            if filename2 == "SecondYearTimetable.xlsx" or filename2 == "SecondYearTimetable.xls":
+                if timetable2 is not None:
+                    for sheet_name, subjects in timetable2.items():
+                        for subject in subjects:
+                            subject_date = datetime.fromtimestamp(
+                                subject['date'] / 1000.0).strftime('%d-%m-%Y')
+                            subject['date'] = subject_date
+                            if subject_date not in dates:
+                                dates.append(subject_date)
+                    stucollections.update_many(
+                        {"sheet_name": "csa"},
+                        {"$set": {"subject": timetable2["csa"]}}
+                    )
+                    stucollections.update_many(
+                        {"sheet_name": "csb"},
+                        {"$set": {"subject": timetable2["csb"]}}
+                    )
+                    stucollections.update_many(
+                        {"sheet_name": "eee"},
+                        {"$set": {"subject": timetable2["eee"]}}
+                    )
+            elif filename3 == "ThirdYearTimetable.xlsx" or filename3 == "ThirdYearTimetable.xls":
+                if timetable3 is not None:
+                    for sheet_name, subjects in timetable3.items():
+                        for subject in subjects:
+                            subject_date = datetime.fromtimestamp(
+                                subject['date'] / 1000.0).strftime('%d-%m-%Y')
+                            subject['date'] = subject_date
+                            if subject_date not in dates:
+                                dates.append(subject_date)
+                    stucollections.update_many(
+                        {"sheet_name": "csa"},
+                        {"$set": {"subject": timetable3["csa"]}}
+                    )
+                    stucollections.update_many(
+                        {"sheet_name": "csb"},
+                        {"$set": {"subject": timetable3["csb"]}}
+                    )
+                    stucollections.update_many(
+                        {"sheet_name": "eee"},
+                        {"$set": {"subject": timetable3["eee"]}}
+                    )
+            elif filename4 == "FourthYearTimetable.xlsx" or filename4 == "FourthYearTimetable.xls":
+                if timetable4 is not None:
+                    for sheet_name, subjects in timetable4.items():
+                        for subject in subjects:
+                            subject_date = datetime.fromtimestamp(
+                                subject['date'] / 1000.0).strftime('%d-%m-%Y')
+                            subject['date'] = subject_date
+                            if subject_date not in dates:
+                                dates.append(subject_date)
+                    stucollections.update_many(
+                        {"sheet_name": "csa"},
+                        {"$set": {"subject": timetable4["csa"]}}
+                    )
+                    stucollections.update_many(
+                        {"sheet_name": "csb"},
+                        {"$set": {"subject": timetable4["csb"]}}
+                    )
+                    stucollections.update_many(
+                        {"sheet_name": "eee"},
+                        {"$set": {"subject": timetable4["eee"]}}
+                    )
+            return render_template('timetable.html', status="successful")
+    else:
+        return render_template('timetable.html')
 
 @app.route('/details', methods=['POST'])
 def details():
@@ -185,55 +303,82 @@ def seating():
         with open('stuarrange.txt', 'r') as stufiles:
             stulist = json.load(stufiles)
         return render_template('seating.html', newlist=stulist)
-    with open('stuarrange.txt', 'r') as stufiles:
-        stulist = json.load(stufiles)
-    for i in stulist:
-        i["a"] = []
-        i["b"] = []
-        if len(listy) == 0:
-            break
-        a = math.ceil(int(i["column"])/2)*int(i["rows"])
-        b = (int(i["column"])*int(i["rows"]))-a
-        firstitem = listy[0]
-        idlist = []
-        idlist.append(firstitem["_id"])
-        listy.pop(0)
-        for j in range(0, a):
-            if len(firstitem["ro"]) == 0:
+    else:
+        for date in dates:
+            global listyy
+            listyy = []
+            details = stucollections.aggregate(
+                [{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
+            for i in details:
+                listyy.append(i)
+            listy = []
+            for item in listyy:
+                for item1 in item["_id"]:
+                    if item1.get("date") == date:
+                        tempdict = dict(item)
+                        tempdict["_id"] = item1
+                        listy.append(tempdict)
+            print(listyy)
+            with open('stuarrange.txt', 'r') as stufiles:
+                stulist = json.load(stufiles)
+            for i in stulist:
+                i["a"] = []
+                i["b"] = []
                 if len(listy) == 0:
                     break
+                a = math.ceil(int(i["column"])/2)*int(i["rows"])
+                b = (int(i["column"])*int(i["rows"]))-a
                 firstitem = listy[0]
+                idlist = []
                 idlist.append(firstitem["_id"])
                 listy.pop(0)
-            i["a"].append(firstitem["ro"][0])
-            stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
-                                   "$set": {"seatnum": "a" + str(len(i["a"]))}})
-            firstitem["ro"].pop(0)
-        if len(firstitem["ro"]) != 0:
-            listy.append(firstitem)
-        if len(listy) == 0:
-            break
-        firstitem = listy[0]
-        listy.pop(0)
-        for k in range(0, b):
-            if len(firstitem["ro"]) == 0:
+                for j in range(0, a):
+                    if len(firstitem["ro"]) == 0:
+                        if len(listy) == 0:
+                            break
+                        firstitem = listy[0]
+                        idlist.append(firstitem["_id"])
+                        listy.pop(0)
+                    i["a"].append(firstitem["ro"][0])
+                    seatinfo = [
+                        {"date": date, "seatnum": "a" + str(len(i["a"]))}]
+                    stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
+                        "$addToSet": {"seatnum": seatinfo}})
+                    firstitem["ro"].pop(0)
+                if len(firstitem["ro"]) != 0:
+                    listy.append(firstitem)
                 if len(listy) == 0:
                     break
                 firstitem = listy[0]
                 listy.pop(0)
-            if firstitem["_id"] in idlist:
-                break
-            i["b"].append(firstitem["ro"][0])
-            stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
-                                   "$set": {"seatnum": "b" + str(len(i["b"]))}})
-            firstitem["ro"].pop(0)
-        if len(firstitem["ro"]) != 0:
-            listy.append(firstitem)
-    newlist = list(stulist)
-    with open('stuarrange.txt', 'w') as f:
-        json.dump(newlist, f, indent=4)
-    filled = True
-    return render_template('seating.html', newlist=newlist)
+                for k in range(0, b):
+                    if len(firstitem["ro"]) == 0:
+                        if len(listy) == 0:
+                            break
+                        firstitem = listy[0]
+                        listy.pop(0)
+                    if firstitem["_id"] in idlist:
+                        break
+                    i["b"].append(firstitem["ro"][0])
+                    seatinfo = [
+                        {"date": date, "seatnum": "a" + str(len(i["a"]))}]
+                    stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
+                        "$addToSet": {"seatnum": seatinfo}})
+                    firstitem["ro"].pop(0)
+                if len(firstitem["ro"]) != 0:
+                    listy.append(firstitem)
+            newlist = list(stulist)
+            with open('stuarrange'+date+'.txt', 'w') as f:
+                json.dump(newlist, f, indent=4)
+            filled = True
+    return "Completed"
+            
+
+@app.route('/test', methods=['GET'])
+def test():
+    global filled
+    filled = False
+    return "Unfilled"
 
 
 if __name__ == '__main__':

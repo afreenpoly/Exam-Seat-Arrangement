@@ -5,13 +5,27 @@
     <title>Uploades</title>
   </head>
   <body>
-    <h1>Succesfully Uploaded</h1>
-    {% if data %}
-      {% for i in data %}
-      {{i}} <br>
-      {% endfor %}
-    {% endif %}
-    <a href="/displaydata">Data</a>
+    <h1>Successfully Uploaded</h1>
+    <h2>2nd Year</h2>
+    <ul>
+        {% for sheet_name in data2 %}
+            <li>{{ sheet_name}}</li>
+        {% endfor %}
+    </ul>
+    <h2>3rd Year</h2>
+    <ul>
+        {% for sheet_name in data3 %}
+            <li>{{ sheet_name}}</li>
+        {% endfor %}
+    </ul>
+    <h2>4th Year</h2>
+    <ul>
+        {% for sheet_name in data4 %}
+            <li>{{ sheet_name}}</li>
+        {% endfor %}
+    </ul>
+    <a href="/displaydata">Show Data</a><br>
+    <a href="/admin">Go Home</a>
   </body>
 </html>
 

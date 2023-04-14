@@ -5,29 +5,12 @@
     <title>Uploades</title>
   </head>
   <body>
-    <h1>Succesfully Uploaded</h1>
-    {% if data %}
-      {% for sheet_name, sheet_data in data.items() %}
-        <h2>{{ sheet_name }}</h2>
-        <table>
-          <thead>
-            <tr>
-              {% for column_name in sheet_data[0] %}
-                <th>{{ column_name }}</th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in sheet_data %}
-              <tr>
-                {% for column_value in row.values() %}
-                  <td>{{ column_value }}</td>
-                {% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% endfor %}
-    {% endif %}
+    <h1>Successfully Uploaded</h1>
+    <h2>2nd Year</h2>
+    <pre>{{data2|tojson(indent=4)}}</pre>
+    <h2>3rd Year</h2>
+    <pre>{{data3|tojson(indent=4)}}</pre>
+    <h2>4th Year</h2>
+    <pre>{{data4|tojson(indent=4)}}</pre>
   </body>
 </html>

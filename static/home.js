@@ -37,10 +37,12 @@ document.getElementById("noofclass").addEventListener("change", function() {
   dropdownContainer.innerHTML = "";
 
   for (let i = 0; i < numDropdowns; i++) {
+    const dropdownWrapper = document.createElement("div"); // Create a new div element to wrap each dropdown
     const dropdown = document.createElement("select");
     dropdown.name = `dropdown-${i}`;
     dropdown.innerHTML = document.getElementById("dropdown").innerHTML;
-    dropdownContainer.appendChild(dropdown);
+    dropdownWrapper.appendChild(dropdown); // Append dropdown to the div element
+    dropdownContainer.appendChild(dropdownWrapper); // Append div element to the dropdownContainer
 
     dropdown.addEventListener("change", function () {
       admClasses.classList.add("hidden");
