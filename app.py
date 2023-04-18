@@ -179,6 +179,17 @@ def timetable():
             timetable4 = excel_to_json(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename4))
             
+            second_year_students = stucollections.find({"Year": "SecondYear"})
+            second_year_student_ids = [student["_id"] for student in second_year_students]
+            third_year_students = stucollections.find({"Year": "ThirdYear"})
+            third_year_student_ids = [student["_id"]
+                                      for student in third_year_students]
+            fourth_year_students = stucollections.find({"Year": "FourthYear"})
+            fourth_year_student_ids = [student["_id"]
+                                      for student in fourth_year_students]
+            
+            
+            
             if filename2 == "SecondYearTimetable.xlsx" or filename2 == "SecondYearTimetable.xls":
                 if timetable2 is not None:
                     for sheet_name, subjects in timetable2.items():
@@ -189,15 +200,18 @@ def timetable():
                             if subject_date not in dates:
                                 dates.append(subject_date)
                     stucollections.update_many(
-                        {"sheet_name": "csa"},
+                        {"sheet_name": "csa", "Year": "SecondYear",
+                            "student_id": {"$in": second_year_student_ids}},
                         {"$set": {"subject": timetable2["csa"]}}
                     )
                     stucollections.update_many(
-                        {"sheet_name": "csb"},
+                        {"sheet_name": "csb", "Year": "SecondYear",
+                            "student_id": {"$in": second_year_student_ids}},
                         {"$set": {"subject": timetable2["csb"]}}
                     )
                     stucollections.update_many(
-                        {"sheet_name": "eee"},
+                        {"sheet_name": "eee", "Year": "SecondYear",
+                            "student_id": {"$in": second_year_student_ids}},
                         {"$set": {"subject": timetable2["eee"]}}
                     )
             elif filename3 == "ThirdYearTimetable.xlsx" or filename3 == "ThirdYearTimetable.xls":
@@ -210,15 +224,18 @@ def timetable():
                             if subject_date not in dates:
                                 dates.append(subject_date)
                     stucollections.update_many(
-                        {"sheet_name": "csa"},
+                        {"sheet_name": "csa", "Year": "ThirdYear",
+                            "student_id": {"$in": third_year_student_ids}},
                         {"$set": {"subject": timetable3["csa"]}}
                     )
                     stucollections.update_many(
-                        {"sheet_name": "csb"},
+                        {"sheet_name": "csb", "Year": "ThirdYear",
+                            "student_id": {"$in": third_year_student_ids}},
                         {"$set": {"subject": timetable3["csb"]}}
                     )
                     stucollections.update_many(
-                        {"sheet_name": "eee"},
+                        {"sheet_name": "eee", "Year": "ThirdYear",
+                            "student_id": {"$in": third_year_student_ids}},
                         {"$set": {"subject": timetable3["eee"]}}
                     )
             elif filename4 == "FourthYearTimetable.xlsx" or filename4 == "FourthYearTimetable.xls":
@@ -231,15 +248,18 @@ def timetable():
                             if subject_date not in dates:
                                 dates.append(subject_date)
                     stucollections.update_many(
-                        {"sheet_name": "csa"},
+                        {"sheet_name": "csa", "Year": "FourthYear",
+                            "student_id": {"$in": fourth_year_student_ids}},
                         {"$set": {"subject": timetable4["csa"]}}
                     )
                     stucollections.update_many(
-                        {"sheet_name": "csb"},
+                        {"sheet_name": "csb", "Year": "FourthYear",
+                            "student_id": {"$in": fourth_year_student_ids}},
                         {"$set": {"subject": timetable4["csb"]}}
                     )
                     stucollections.update_many(
-                        {"sheet_name": "eee"},
+                        {"sheet_name": "eee", "Year": "FourthYear",
+                            "student_id": {"$in": fourth_year_student_ids}},
                         {"$set": {"subject": timetable4["eee"]}}
                     )
             return render_template('timetable.html', status="successful")
