@@ -1,6 +1,6 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session
 from datetime import datetime
-from converter import excel_to_json
+from static.converter import excel_to_json
 import os
 import math
 import json
@@ -81,14 +81,14 @@ def student():
         seatnum = None
         if student_data is not None:
             seatnum = student_data['seatnum']
-        return render_template('student.html', roll_num=roll, seat_num=seatnum)
+        return render_template('studentpage.html', roll_num=roll, seat_num=seatnum)
     else:
-        return render_template('student.html')
+        return render_template('studentpage.html')
 
 
 @app.route('/uploaddata', methods=['GET'])
 def uploadpage():
-    return render_template('uploadpage.html')
+    return render_template('studentdataupload.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -140,7 +140,7 @@ def upload_file():
             listy.append(i)
     else:
         data2 = data3 = data4 = None
-    return render_template('uploads.html', data2=data2, data3=data3, data4=data4)
+    return render_template('uploadeddata.html', data2=data2, data3=data3, data4=data4)
 
 
 @app.route('/displaydata', methods=['GET'])
@@ -262,9 +262,9 @@ def timetable():
                             "student_id": {"$in": fourth_year_student_ids}},
                         {"$set": {"subject": timetable4["eee"]}}
                     )
-            return render_template('timetable.html', status="successful")
+            return render_template('timetableupload.html', status="successful")
     else:
-        return render_template('timetable.html')
+        return render_template('timetableupload.html')
 
 @app.route('/details', methods=['POST'])
 def details():
@@ -308,7 +308,7 @@ def details():
     for i in range(noofclass):
         data.append({"column": str(columns),
                     "rows": str(rows), "a": [], "b": [], "class_name": class_name})
-    with open('stuarrange.txt', 'w') as f:
+    with open('static/stuarrange.txt', 'w') as f:
         json.dump(data, f, indent=4)
     global filled
     filled = False
@@ -320,7 +320,7 @@ def details():
 def seating():
     global filled
     if filled:
-        with open('stuarrange.txt', 'r') as stufiles:
+        with open('static/stuarrange.txt', 'r') as stufiles:
             stulist = json.load(stufiles)
         return render_template('seating.html', newlist=stulist)
     else:
@@ -339,7 +339,7 @@ def seating():
                         tempdict["_id"] = item1
                         listy.append(tempdict)
             print(listyy)
-            with open('stuarrange.txt', 'r') as stufiles:
+            with open('static/stuarrange.txt', 'r') as stufiles:
                 stulist = json.load(stufiles)
             for i in stulist:
                 i["a"] = []
@@ -388,7 +388,7 @@ def seating():
                 if len(firstitem["ro"]) != 0:
                     listy.append(firstitem)
             newlist = list(stulist)
-            with open('stuarrange'+date+'.txt', 'w') as f:
+            with open('static/stuarrange'+date+'.txt', 'w') as f:
                 json.dump(newlist, f, indent=4)
             filled = True
     return "Completed"
