@@ -1,4 +1,15 @@
-.hidden {
-  display: none;
+.wrapper {
+  white-space: nowrap;
 }
 
+.box {
+  display: inline-block;
+  width: 10%;
+  margin: 15px;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+
+.centered {
+    text-align: center;
+  }

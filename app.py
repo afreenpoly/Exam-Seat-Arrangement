@@ -36,7 +36,7 @@ def index():
 
 @app.route('/admin')
 def admin():
-    return render_template('admin.html')
+    return render_template('adminhome.html')
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -90,6 +90,7 @@ def student():
 def uploadpage():
     return render_template('studentdataupload.html')
 
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file2' not in request.files or 'file3' not in request.files or 'file4' not in request.files:
@@ -109,28 +110,30 @@ def upload_file():
         file3.save(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
         file4.save(os.path.join(app.config['UPLOAD_FOLDER'], filename4))
 
-        global data2,data3,data4
+        global data2, data3, data4
         data2 = excel_to_json(os.path.join(
             app.config['UPLOAD_FOLDER'], filename2))
-        data3 = excel_to_json(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
-        data4 = excel_to_json(os.path.join(app.config['UPLOAD_FOLDER'], filename4))
+        data3 = excel_to_json(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename3))
+        data4 = excel_to_json(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename4))
         if data2 is not None and data3 is not None and data4 is not None:
             stucollections.delete_many({})
             for sheet_name, sheet_data in data2.items():
                 stucollections.insert_many([
-                    {**item, "sheet_name": sheet_name, "Year": filename2.split("Students")[0], "seatnum": None,
+                    {**item, "sheet_name": sheet_name, "Year": "SecondYear",
                      "classroom": None} for item in sheet_data
-            ])
+                ])
             for sheet_name, sheet_data in data3.items():
                 stucollections.insert_many([
-                    {**item, "sheet_name": sheet_name, "Year": filename3.split("Students")[0], "seatnum": None,
+                    {**item, "sheet_name": sheet_name, "Year": "ThirdYear",
                      "classroom": None} for item in sheet_data
-            ])
+                ])
             for sheet_name, sheet_data in data4.items():
                 stucollections.insert_many([
-                    {**item, "sheet_name": sheet_name, "Year": filename4.split("Students")[0], "seatnum": None,
+                    {**item, "sheet_name": sheet_name, "Year": "FourthYear",
                      "classroom": None} for item in sheet_data
-            ])
+                ])
         global listy
         listy = []
         details = []
@@ -154,7 +157,7 @@ def timetable():
         file2 = request.files['file2']
         file3 = request.files['file3']
         file4 = request.files['file4']
-        
+
         # Check if file2 is uploaded
         if file2.filename:
             filename2 = secure_filename(file2.filename)
@@ -162,7 +165,7 @@ def timetable():
             global timetable2
             timetable2 = excel_to_json(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename2))
-
+            print(timetable2)
         # Check if file3 is uploaded
         if file3.filename:
             filename3 = secure_filename(file3.filename)
@@ -170,7 +173,7 @@ def timetable():
             global timetable3
             timetable3 = excel_to_json(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename3))
-
+            print(timetable3)
         # Check if file4 is uploaded
         if file4.filename:
             filename4 = secure_filename(file4.filename)
@@ -178,142 +181,158 @@ def timetable():
             global timetable4
             timetable4 = excel_to_json(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename4))
-            
-            second_year_students = stucollections.find({"Year": "SecondYear"})
-            second_year_student_ids = [student["_id"] for student in second_year_students]
-            third_year_students = stucollections.find({"Year": "ThirdYear"})
-            third_year_student_ids = [student["_id"]
-                                      for student in third_year_students]
-            fourth_year_students = stucollections.find({"Year": "FourthYear"})
-            fourth_year_student_ids = [student["_id"]
-                                      for student in fourth_year_students]
-            
-            
-            
-            if filename2 == "SecondYearTimetable.xlsx" or filename2 == "SecondYearTimetable.xls":
-                if timetable2 is not None:
-                    for sheet_name, subjects in timetable2.items():
-                        for subject in subjects:
-                            subject_date = datetime.fromtimestamp(
-                                subject['date'] / 1000.0).strftime('%d-%m-%Y')
-                            subject['date'] = subject_date
-                            if subject_date not in dates:
-                                dates.append(subject_date)
-                    stucollections.update_many(
-                        {"sheet_name": "csa", "Year": "SecondYear",
-                            "student_id": {"$in": second_year_student_ids}},
-                        {"$set": {"subject": timetable2["csa"]}}
-                    )
-                    stucollections.update_many(
-                        {"sheet_name": "csb", "Year": "SecondYear",
-                            "student_id": {"$in": second_year_student_ids}},
-                        {"$set": {"subject": timetable2["csb"]}}
-                    )
-                    stucollections.update_many(
-                        {"sheet_name": "eee", "Year": "SecondYear",
-                            "student_id": {"$in": second_year_student_ids}},
-                        {"$set": {"subject": timetable2["eee"]}}
-                    )
-            elif filename3 == "ThirdYearTimetable.xlsx" or filename3 == "ThirdYearTimetable.xls":
-                if timetable3 is not None:
-                    for sheet_name, subjects in timetable3.items():
-                        for subject in subjects:
-                            subject_date = datetime.fromtimestamp(
-                                subject['date'] / 1000.0).strftime('%d-%m-%Y')
-                            subject['date'] = subject_date
-                            if subject_date not in dates:
-                                dates.append(subject_date)
-                    stucollections.update_many(
-                        {"sheet_name": "csa", "Year": "ThirdYear",
-                            "student_id": {"$in": third_year_student_ids}},
-                        {"$set": {"subject": timetable3["csa"]}}
-                    )
-                    stucollections.update_many(
-                        {"sheet_name": "csb", "Year": "ThirdYear",
-                            "student_id": {"$in": third_year_student_ids}},
-                        {"$set": {"subject": timetable3["csb"]}}
-                    )
-                    stucollections.update_many(
-                        {"sheet_name": "eee", "Year": "ThirdYear",
-                            "student_id": {"$in": third_year_student_ids}},
-                        {"$set": {"subject": timetable3["eee"]}}
-                    )
-            elif filename4 == "FourthYearTimetable.xlsx" or filename4 == "FourthYearTimetable.xls":
-                if timetable4 is not None:
-                    for sheet_name, subjects in timetable4.items():
-                        for subject in subjects:
-                            subject_date = datetime.fromtimestamp(
-                                subject['date'] / 1000.0).strftime('%d-%m-%Y')
-                            subject['date'] = subject_date
-                            if subject_date not in dates:
-                                dates.append(subject_date)
-                    stucollections.update_many(
-                        {"sheet_name": "csa", "Year": "FourthYear",
-                            "student_id": {"$in": fourth_year_student_ids}},
-                        {"$set": {"subject": timetable4["csa"]}}
-                    )
-                    stucollections.update_many(
-                        {"sheet_name": "csb", "Year": "FourthYear",
-                            "student_id": {"$in": fourth_year_student_ids}},
-                        {"$set": {"subject": timetable4["csb"]}}
-                    )
-                    stucollections.update_many(
-                        {"sheet_name": "eee", "Year": "FourthYear",
-                            "student_id": {"$in": fourth_year_student_ids}},
-                        {"$set": {"subject": timetable4["eee"]}}
-                    )
-            return render_template('timetableupload.html', status="successful")
+            print(timetable4)
+
+        second_year_students = stucollections.find({"Year": "SecondYear"})
+        second_year_student_ids = [student["_id"]
+                                   for student in second_year_students]
+        third_year_students = stucollections.find({"Year": "ThirdYear"})
+        third_year_student_ids = [student["_id"]
+                                  for student in third_year_students]
+        fourth_year_students = stucollections.find({"Year": "FourthYear"})
+        fourth_year_student_ids = [student["_id"]
+                                   for student in fourth_year_students]
+
+        if timetable2 is not None:
+            for sheet_name, subjects in timetable2.items():
+                for subject in subjects:
+                    subject_date = datetime.fromtimestamp(
+                        subject['date'] / 1000.0).strftime('%d-%m-%Y')
+                    subject['date'] = subject_date
+                    if subject_date not in dates:
+                        dates.append(subject_date)
+            stucollections.update_many(
+                {"sheet_name": "csa", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["csa"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "csb", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["csb"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "eee", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["eee"]}}
+            )
+
+        if timetable3 is not None:
+            for sheet_name, subjects in timetable3.items():
+                for subject in subjects:
+                    subject_date = datetime.fromtimestamp(
+                        subject['date'] / 1000.0).strftime('%d-%m-%Y')
+                    subject['date'] = subject_date
+                    if subject_date not in dates:
+                        dates.append(subject_date)
+            stucollections.update_many(
+                {"sheet_name": "csa", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["csa"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "csb", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["csb"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "eee", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["eee"]}}
+            )
+        if timetable4 is not None:
+            for sheet_name, subjects in timetable4.items():
+                for subject in subjects:
+                    subject_date = datetime.fromtimestamp(
+                        subject['date'] / 1000.0).strftime('%d-%m-%Y')
+                    subject['date'] = subject_date
+                    if subject_date not in dates:
+                        dates.append(subject_date)
+            stucollections.update_many(
+                {"sheet_name": "csa", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["csa"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "csb", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["csb"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "eee", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["eee"]}}
+            )
+        return render_template('timetableupload.html', status="successful")
     else:
         return render_template('timetableupload.html')
 
+
+@app.route('/viewtimetable', methods=['GET'])
+def view_timetable():
+    documents = stucollections.find({}, {'sheet_name': 1, 'subject': 1, 'Year':1})
+    timetables = {}
+    for doc in documents:
+        year = doc['Year']
+        sheet_name = doc['sheet_name']
+        subject = doc['subject']
+
+        if year not in timetables:
+            timetables[year] = {}
+            
+        if sheet_name not in timetables[year]:
+            timetables[year][sheet_name] = []
+        timetables[year][sheet_name].append(subject)
+    timetables=jsonify(timetables)
+    return timetables
+
+@app.route('/viewdata', methods=['GET'])
+def view_data():
+    documents = stucollections.find({}, {'name': 1, 'rollnum': 1, 'sheet_name': 1, 'Year': 1})
+    data = []
+    for doc in documents:
+        data.append({
+            'name': doc['name'],
+            'rollnum': doc['rollnum'],
+            'sheet_name': doc['sheet_name'],
+            'Year': doc['Year']
+        })
+    data=jsonify(data)
+    return data
+    
+
+
 @app.route('/details', methods=['POST'])
 def details():
-    global class_name 
-    class_name= ""
-    option = request.form.get('dropdown')
-    if option == '0':
-        return "Error: Please select a Class"
-    elif option == '1':
-        seats = 40
-        class_name = request.form.get('admClassDropdown')
-    elif option == '2':
-        seats = 40
-        class_name = request.form.get('classDropdown')
-    elif option == '3':
-        seats = 150
-        class_name = request.form.get('commonexmdrop')
-    elif option == '4':
-        seats = 140
-        class_name = request.form.get('commexmdrop')
-    elif option == '5':
-        seats = 50
-        class_name = request.form.get('drawdrop')
-    elif option == '6':
-        seats = 50
-        class_name = request.form.get('commonexmdrop2')
-    else:
-        seats = 0
-    noofclass = request.form.get('noofclass')
-    if not noofclass:
-        return "Error: Please enter a value for Number of Class"
-    noofclass = int(noofclass)
-    totalseats = noofclass * seats
+    items = request.form.getlist('item[]')
+    seats = 0
+    for item in items:
+        if item in ['ADM1', 'ADM2', 'C1', 'C2', 'C15', 'C16']:
+            seats += 40
+        elif item == 'CEH1':
+            seats += 150
+        elif item == 'CEH2':
+            seats += 140
+        elif item in ['DH1', 'SH1']:
+            seats += 50
     max_rows = 7
     max_columns = 6
     seats_per_bench = 2
-    columns = min(max_columns, (totalseats + (seats_per_bench *
+    columns = min(max_columns, (seats + (seats_per_bench *
                   max_rows) - 1) // (seats_per_bench * max_rows))
-    rows = min(max_rows, (totalseats + seats_per_bench - 1) // seats_per_bench)
+    rows = min(max_rows, (seats + seats_per_bench - 1) // seats_per_bench)
+    
     data = []
-    for i in range(noofclass):
+    for i in range(items):
         data.append({"column": str(columns),
                     "rows": str(rows), "a": [], "b": [], "class_name": class_name})
     with open('static/stuarrange.txt', 'w') as f:
         json.dump(data, f, indent=4)
+        
+        
     global filled
     filled = False
-    return render_template('classdetails.html', seats=seats,
-                           noofclass=noofclass, totalseats=totalseats, rows=rows, cols=columns)
+    return render_template('classdetails.html')
 
 
 @app.route('/seating', methods=['GET'])

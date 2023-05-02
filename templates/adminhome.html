@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Admin</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <form action="/details" method="POST">
+      <div class="wrapper">
+        <div class="box">
+          <label>ADM Class:</label>
+          <br />
+          <input type="checkbox" name="item[]" id="ADM1" /><label for="ADM1"
+            >ADM 303</label
+          >
+          <br />
+          <input type="checkbox" name="item[]" id="ADM2" /><label for="ADM2"
+            >ADM 304</label
+          >
+        </div>
+
+        <div class="box">
+          <label>Classroom:</label>
+          <br />
+          <input type="checkbox" name="item[]" id="C1" /><label for="C1"
+            >EAB 407</label
+          >
+          <br />
+          <input type="checkbox" name="item[]" id="C2" /><label for="C2"
+            >EAB 106</label
+          >
+        </div>
+
+        <div class="box">
+          <label>Classroom:</label>
+          <br />
+          <input type="checkbox" name="item[]" id="C15" /><label for="C15"
+            >WAB 206</label
+          >
+          <br />
+          <input type="checkbox" name="item[]" id="C16" /><label for="C16">
+            WAB 105</label
+          >
+        </div>
+        <div class="box">
+          <label>Common Exam Hall1:</label><br />
+          <input type="checkbox" name="item[]" id="CEH1" /><label for="CEH1">
+            EAB 415
+          </label>
+        </div>
+        <div class="box">
+          <label>Common Exam Hall2:</label><br />
+          <input type="checkbox" name="item[]" id="CEH2" /><label for="CEH2">
+            EAB 416</label
+          >
+        </div>
+        <div class="box">
+          <label>Drawing Hall:</label><br />
+          <input type="checkbox" name="item[]" id="DH1" /><label for="DH1">
+            WAB 412</label
+          >
+        </div>
+        <div class="box">
+          <label>Seminar Hall:</label><br />
+          <input type="checkbox" name="item[]" id="SH1" /><label for="SH1">
+            EAB 310</label
+          >
+        </div>
+      </div>
+
+      <div class="centered">
+        <input type="submit" value="Submit" />
+      </div>
+    </form>
+    <br />
+    <a href="/seating" target="_blank">Seating Arrangement</a><br />
+
+    <a href="/uploaddata" target="_blank">Upload Data</a><br />
+    <a href="/timetable" target="_blank">Upload Timetable</a><br />
+
+    <a href="/viewdata" target="_blank">View Data</a><br />
+    <a href="/viewtimetable" target="_blank">View Timetable</a><br />
+  </body>
+</html>
