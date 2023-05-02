@@ -305,29 +305,52 @@ def view_data():
 @app.route('/details', methods=['POST'])
 def details():
     items = request.form.getlist('item[]')
-    seats = 0
+    class_data = []
     for item in items:
-        if item in ['ADM1', 'ADM2', 'C1', 'C2', 'C15', 'C16']:
-            seats += 40
+        if item == 'ADM1':
+            class_name = 'ADM 303'
+            seats = 40
+        elif item == 'ADM2':
+            class_name = 'ADM 304'
+            seats = 40
+        elif item == 'C1':
+            class_name = 'EAB 407'
+            seats = 40
+        elif item == 'C2':
+            class_name = 'EAB 106'
+            seats = 40
+        elif item == 'C15':
+            class_name = 'WAB 206'
+            seats = 40
+        elif item == 'C16':
+            class_name = 'WAB 105'
+            seats = 40
         elif item == 'CEH1':
-            seats += 150
+            class_name = 'Common Exam Hall 1'
+            seats = 150
         elif item == 'CEH2':
-            seats += 140
-        elif item in ['DH1', 'SH1']:
-            seats += 50
-    max_rows = 7
-    max_columns = 6
-    seats_per_bench = 2
-    columns = min(max_columns, (seats + (seats_per_bench *
-                  max_rows) - 1) // (seats_per_bench * max_rows))
-    rows = min(max_rows, (seats + seats_per_bench - 1) // seats_per_bench)
-    
-    data = []
-    for i in range(items):
-        data.append({"column": str(columns),
-                    "rows": str(rows), "a": [], "b": [], "class_name": class_name})
+            class_name = 'Common Exam Hall 2'
+            seats = 140
+        elif item == 'DH1':
+            class_name = 'Drawing Hall'
+            seats = 50
+        elif item == 'SH1':
+            class_name = 'Seminar Hall'
+            seats = 50
+
+        max_rows = 7
+        max_columns = 6
+        seats_per_bench = 2
+        columns = min(max_columns, (seats + (seats_per_bench *
+                      max_rows) - 1) // (seats_per_bench * max_rows))
+        rows = min(max_rows, (seats + seats_per_bench - 1) // seats_per_bench)
+
+        class_data.append(
+            {"column": str(columns),
+             "rows": str(rows), "a": [], "b": [], "class_name": class_name})
+
     with open('static/stuarrange.txt', 'w') as f:
-        json.dump(data, f, indent=4)
+        json.dump(class_data, f, indent=4)
         
         
     global filled
