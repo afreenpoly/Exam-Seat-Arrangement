@@ -306,6 +306,8 @@ def view_data():
 def details():
     items = request.form.getlist('item[]')
     class_data = []
+    class_name = ''
+    seats = 0
     for item in items:
         if item == 'ADM1':
             class_name = 'ADM 303'

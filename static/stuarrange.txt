@@ -1,37 +1,30 @@
 [
     {
-        "column": "6",
-        "rows": "7",
+        "column": "0",
+        "rows": "0",
         "a": [],
         "b": [],
-        "class_name": null
+        "class_name": ""
     },
     {
-        "column": "6",
-        "rows": "7",
+        "column": "0",
+        "rows": "0",
         "a": [],
         "b": [],
-        "class_name": null
+        "class_name": ""
     },
     {
-        "column": "6",
-        "rows": "7",
+        "column": "0",
+        "rows": "0",
         "a": [],
         "b": [],
-        "class_name": null
+        "class_name": ""
     },
     {
-        "column": "6",
-        "rows": "7",
+        "column": "0",
+        "rows": "0",
         "a": [],
         "b": [],
-        "class_name": null
-    },
-    {
-        "column": "6",
-        "rows": "7",
-        "a": [],
-        "b": [],
-        "class_name": null
+        "class_name": ""
     }
 ]
