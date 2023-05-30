@@ -23,60 +23,66 @@ stucollections = db.student
 # global variables
 listy = []
 filled = False
-dates = []
+with open('static/dates.txt', 'r') as datefiles:
+    dates = json.load(datefiles)
 
 # routes
 
-#homepage
+# homepage
+
+
 @app.route('/')
 def index():
     return render_template('home.html')
 
 # signup page for admin
+
+
 @app.route('/admin/register', methods=['GET', 'POST'])
 def register():
-	if request.method == 'POST':
-		username = request.form['username']
-		password = request.form['password']
-		if usercollections.find_one({'username': username}):
-			flash('Username already exists', 'error')
-			return redirect(url_for('register'))
-		else:
-			usercollections.insert_one({'username': username, 'password': password})
-			flash('Registration successful!', 'success')
-			return redirect(url_for('login'))
-	else:
-		return render_template('adminlogin.html')
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if usercollections.find_one({'username': username}):
+            flash('Username already exists', 'error')
+            return redirect(url_for('register'))
+        else:
+            usercollections.insert_one(
+                {'username': username, 'password': password})
+            flash('Registration successful!', 'success')
+            return redirect(url_for('login'))
+    else:
+        return render_template('adminlogin.html')
 
 
 # login page for admin
 @app.route('/admin/login', methods=['GET', 'POST'])
 def login():
-	if request.method == 'POST':
-		username = request.form['username']
-		password = request.form['password']
-		user = usercollections.find_one({'username': username, 'password': password})
-		if user:
-			session['username'] = username
-			return redirect(url_for('admin'))
-		else:
-			return redirect(url_for('login'))
-	else:
-		return render_template('adminlogin.html')
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = usercollections.find_one(
+            {'username': username, 'password': password})
+        if user:
+            session['username'] = username
+            return redirect(url_for('admin'))
+        else:
+            return redirect(url_for('login'))
+    else:
+        return render_template('adminlogin.html')
 
 
-#main page of admin where he can choose the classes
-#-issue-:the classes chosen should used in /details for more processing, 
-        #these are the available classes where the students should be seated
+# main page of admin where he can choose the classes
+# -issue-:the classes chosen should used in /details for more processing,
+    # these are the available classes where the students should be seated
 @app.route('/admin')
 def admin():
     return render_template('adminhome.html')
 
 
-
-#currently not working
+# currently not working
 # -issue-: When student enters their rollnumber and a particular date .
-           #their corresponding seating should be displayed
+    # their corresponding seating should be displayed
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     if request.method == 'POST':
@@ -89,16 +95,20 @@ def student():
     else:
         return render_template('studentpage.html')
 
-#page for uploading student details
+# page for uploading student details
+
+
 @app.route('/uploaddata', methods=['GET'])
 def uploadpage():
     return render_template('studentdataupload.html')
 
 # when the data is submitted from /uploaddata or studentdataupload.html the data is processed here
-#Here the data is checked and uploaded to the database 
-    #with sheetname as classname,year,classroom:which is the class they are going to be seated
-#the data is also passed to "listy" for later usage in /seating
+# Here the data is checked and uploaded to the database
+    # with sheetname as classname,year,classroom:which is the class they are going to be seated
+# the data is also passed to "listy" for later usage in /seating
 # finally the uploaded data is displayed in uploadeddata.html
+
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file2' not in request.files or 'file3' not in request.files or 'file4' not in request.files:
@@ -153,13 +163,17 @@ def upload_file():
         data2 = data3 = data4 = None
     return render_template('uploadeddata.html', data2=data2, data3=data3, data4=data4)
 
-#page for displaying the data via "GET" method
+# page for displaying the data via "GET" method
+
+
 @app.route('/displaydata', methods=['GET'])
 def display_data():
     return render_template('displaydata.html', data2=data2, data3=data3, data4=data4)
 
 # here the timetable is uploaded via timetableupload.html
-#the filename is checked
+# the filename is checked
+
+
 @app.route('/timetable', methods=['GET', 'POST'])
 def timetable():
     if request.method == 'POST':
@@ -192,11 +206,11 @@ def timetable():
                 app.config['UPLOAD_FOLDER'], filename4))
             print(timetable4)
 
-        # "Year" field is set to "SecondYear" 
-        # creates a list of the "_id" field values for those documents. 
-        # It then repeats this process for students in their third and fourth year of study, 
+        # "Year" field is set to "SecondYear"
+        # creates a list of the "_id" field values for those documents.
+        # It then repeats this process for students in their third and fourth year of study,
         # creating separate lists of IDs for each year level.
-        
+
         second_year_students = stucollections.find({"Year": "SecondYear"})
         second_year_student_ids = [student["_id"]
                                    for student in second_year_students]
@@ -207,15 +221,15 @@ def timetable():
         fourth_year_student_ids = [student["_id"]
                                    for student in fourth_year_students]
 
-        # The code first checks if the timetable exists by checking if "timetable2" is not None. 
-        # If it does exist, the code iterates over the sheets in the timetable ("timetable2.items()"), 
-        # and for each subject in each sheet, it converts the "date" field to a string in the format '%d-%m-%Y' 
-        # using the "datetime.fromtimestamp()" and "strftime()" functions. 
+        # The code first checks if the timetable exists by checking if "timetable2" is not None.
+        # If it does exist, the code iterates over the sheets in the timetable ("timetable2.items()"),
+        # and for each subject in each sheet, it converts the "date" field to a string in the format '%d-%m-%Y'
+        # using the "datetime.fromtimestamp()" and "strftime()" functions.
         # It then checks if the subject date is already in the "dates" list, and if not , adds it to the list.
-        # The code then updates the "subject" field for each sheet in the "stucollections" 
-        # collection based on the sheet name, year level, and student IDs. 
-        # For each sheet, it uses the "update_many()" method to update the "subject" field of all documents in the collection 
-        # where the "sheet_name" field is equal to the current sheet, the "Year" field is equal to "SecondYear", 
+        # The code then updates the "subject" field for each sheet in the "stucollections"
+        # collection based on the sheet name, year level, and student IDs.
+        # For each sheet, it uses the "update_many()" method to update the "subject" field of all documents in the collection
+        # where the "sheet_name" field is equal to the current sheet, the "Year" field is equal to "SecondYear",
         # and the "_id" field is in the list of second-year student IDs retrieved earlier.
 
         # The updated "subject" field is set to the contents of the corresponding sheet in the "timetable2" dictionary,
@@ -291,14 +305,20 @@ def timetable():
                     "_id": {"$in": fourth_year_student_ids}},
                 {"$set": {"subject": timetable4["eee"]}}
             )
+
+        with open('static/dates.txt', 'w') as f:
+            json.dump(dates, f, indent=4)
         return render_template('timetableupload.html', status="successful")
     else:
         return render_template('timetableupload.html')
 
-#the timetable is fetched and displayed here
+# the timetable is fetched and displayed here
+
+
 @app.route('/viewtimetable', methods=['GET'])
 def view_timetable():
-    documents = stucollections.find({}, {'sheet_name': 1, 'subject': 1, 'Year':1})
+    documents = stucollections.find(
+        {}, {'sheet_name': 1, 'subject': 1, 'Year': 1})
     timetables = {}
     for doc in documents:
         year = doc['Year']
@@ -307,11 +327,11 @@ def view_timetable():
 
         if year not in timetables:
             timetables[year] = {}
-            
+
         if sheet_name not in timetables[year]:
             timetables[year][sheet_name] = []
         timetables[year][sheet_name].append(subject)
-    timetables=jsonify(timetables)
+    timetables = jsonify(timetables)
     return timetables
 
 
@@ -319,7 +339,8 @@ def view_timetable():
 # this route fetches the uploaded data from the mongodb
 @app.route('/viewdata', methods=['GET'])
 def view_data():
-    documents = stucollections.find({}, {'name': 1, 'rollnum': 1, 'sheet_name': 1, 'Year': 1})
+    documents = stucollections.find(
+        {}, {'name': 1, 'rollnum': 1, 'sheet_name': 1, 'Year': 1})
     data = []
     for doc in documents:
         data.append({
@@ -328,80 +349,230 @@ def view_data():
             'sheet_name': doc['sheet_name'],
             'Year': doc['Year']
         })
-    data=jsonify(data)
+    data = jsonify(data)
     return data
-    
 
-#here we are assigning the classname and seat num for each class
-#-issue-:stuarrange.txt is a template or skeleton for our seating arrangement. 
-         #the layout of each class is designed in this skeleton file
-         #later in /seating this skeleton is used for seating the students
-         #the columns and rows should be made according to the classroom layout provided
+
+# here we are assigning the classname and seat num for each class
+# -issue-:stuarrange.txt is a template or skeleton for our seating arrangement.
+    # the layout of each class is designed in this skeleton file
+    # later in /seating this skeleton is used for seating the students
+    # the columns and rows should be made according to the classroom layout provided
 # -issue-:Only the available classes should be included in this.
-    # the available classes are chosen by the admin in /admin 
-    #seats should be assigned accordingly
+    # the available classes are chosen by the admin in /admin
+    # seats should be assigned accordingly
 @app.route('/details', methods=['POST'])
 def details():
     items = request.form.getlist('item[]')
+    print(items)
+    columns = 0
+    rows = 0
     class_data = []
     class_name = ''
     seats = 0
     for item in items:
-        if item == 'ADM1':
+        if item == 'ADM 303':
             class_name = 'ADM 303'
+            columns = 7
+            rows = 3
             seats = 40
-        elif item == 'ADM2':
+        elif item == 'ADM 304':
             class_name = 'ADM 304'
+            columns = 8
+            rows = 3
             seats = 40
-        elif item == 'C1':
+        elif item == 'ADM 305':
+            class_name = 'ADM 305'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'ADM 306':
+            class_name = 'ADM 306'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'ADM 307':
+            class_name = 'ADM 307'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'ADM 308':
+            class_name = 'ADM 308'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'ADM 309':
+            class_name = 'ADM 309'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'ADM 310':
+            class_name = 'ADM 310'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 407':
             class_name = 'EAB 407'
+            columns = 5
+            rows = 3
             seats = 40
-        elif item == 'C2':
+        elif item == 'EAB 106':
             class_name = 'EAB 106'
+            columns = 3
+            rows = 3
             seats = 40
-        elif item == 'C15':
+        elif item == 'EAB 206':
+            class_name = 'EAB 206'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 306':
+            class_name = 'EAB 306'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 401':
+            class_name = 'EAB 401'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 405':
+            class_name = 'EAB 405'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 304':
+            class_name = 'EAB 304'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 303':
+            class_name = 'EAB 303'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 104':
+            class_name = 'EAB 104'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 103':
+            class_name = 'EAB 103'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 203':
+            class_name = 'EAB 203'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 204':
+            class_name = 'EAB 204'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 206':
             class_name = 'WAB 206'
+            columns = 8
+            rows = 3
             seats = 40
-        elif item == 'C16':
+        elif item == 'WAB 105':
             class_name = 'WAB 105'
+            columns = 7
+            rows = 3
             seats = 40
-        elif item == 'CEH1':
-            class_name = 'Common Exam Hall 1'
+        elif item == 'WAB 106':
+            class_name = 'WAB 106'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 107':
+            class_name = 'WAB 107'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 207':
+            class_name = 'WAB 207'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 212':
+            class_name = 'WAB 212'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 210':
+            class_name = 'WAB 210'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 211':
+            class_name = 'WAB 211'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 205':
+            class_name = 'WAB 205'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 305':
+            class_name = 'WAB 305'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 303':
+            class_name = 'WAB 303'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 403':
+            class_name = 'WAB 403'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'WAB 405':
+            class_name = 'WAB 405'
+            columns = 7
+            rows = 3
+            seats = 40
+        elif item == 'EAB 415':
+            class_name = 'EAB 415'
             seats = 150
-        elif item == 'CEH2':
-            class_name = 'Common Exam Hall 2'
+        elif item == 'EAB 416':
+            class_name = 'EAB 416'
             seats = 140
-        elif item == 'DH1':
-            class_name = 'Drawing Hall'
+        elif item == 'WAB 412':
+            class_name = 'WAB 412'
             seats = 50
-        elif item == 'SH1':
-            class_name = 'Seminar Hall'
+        elif item == 'EAB 310':
+            class_name = 'EAB 310'
             seats = 50
-
-        max_rows = 7
-        max_columns = 6
-        seats_per_bench = 2
-        columns = min(max_columns, (seats + (seats_per_bench *
-                      max_rows) - 1) // (seats_per_bench * max_rows))
-        rows = min(max_rows, (seats + seats_per_bench - 1) // seats_per_bench)
-
+    
         class_data.append(
             {"column": str(columns),
              "rows": str(rows), "a": [], "b": [], "class_name": class_name})
+        # max_rows = 7
+        # max_columns = 6
+        # seats_per_bench = 2
+        # columns = min(max_columns, (seats + (seats_per_bench *
+        #               max_rows) - 1) // (seats_per_bench * max_rows))
+        # rows = min(max_rows, (seats + seats_per_bench - 1) // seats_per_bench)
 
     with open('static/stuarrange.txt', 'w') as f:
         json.dump(class_data, f, indent=4)
-        
-        
+
     global filled
     filled = False
+
+    print(class_data)
     return render_template('classdetails.html')
 
 
-#here the seating is done
-#only two students can sit one bench but with different subjects as exam
-#-issue-:this issue may arise when there is limited class and students with same subject maybe seated nearby
-# using the skeleton file stuarrange.txt the students are seated into the classrooms 
+# here the seating is done
+# only two students can sit one bench but with different subjects as exam
+# -issue-:this issue may arise when there is limited class and students with same subject maybe seated nearby
+# using the skeleton file stuarrange.txt the students are seated into the classrooms
 # the timetable/date is noted . stuarrange.txt files which is the seating arrangement is generated for each day in the timetable
 
 @app.route('/seating', methods=['GET'])
@@ -480,8 +651,10 @@ def seating():
                 json.dump(newlist, f, indent=4)
             filled = True
     return "Completed"
-            
-#tesing out
+
+# tesing out
+
+
 @app.route('/test', methods=['GET'])
 def test():
     global filled
@@ -489,19 +662,17 @@ def test():
     return "Unfilled"
 
 
-#main function
+# main function
 if __name__ == '__main__':
     app.run()
 
-#-issue-: The output should be displayed as a table with seatnumber and their rollnumber. 
-        # the heading should be the classroom name 
-        # this should be downloadable 
-#-issue-: Another output should be generated in which a range is displayed for the current day and the corresponding seating
-        #ex: 25-12-2025 
-            #12012001 - 12012035  : EAB 103
-            #12012036 - 12012063  : EAB 104
-#-issue-:Since iam using admission number (120120__) instead of University Number(JEC____)
-        #this might cause an issue for LET students
-        #they get the admission num (121120__) of juniors while the university number is continous (LJEC____)
-        
-            
+# -issue-: The output should be displayed as a table with seatnumber and their rollnumber.
+    # the heading should be the classroom name
+    # this should be downloadable
+# -issue-: Another output should be generated in which a range is displayed for the current day and the corresponding seating
+    # ex: 25-12-2025
+    # 12012001 - 12012035  : EAB 103
+    # 12012036 - 12012063  : EAB 104
+# -issue-:Since iam using admission number (120120__) instead of University Number(JEC____)
+    # this might cause an issue for LET students
+    # they get the admission num (121120__) of juniors while the university number is continous (LJEC____)
