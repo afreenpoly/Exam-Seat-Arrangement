@@ -313,8 +313,6 @@ def timetable():
         return render_template('timetableupload.html')
 
 # the timetable is fetched and displayed here
-
-
 @app.route('/viewtimetable', methods=['GET'])
 def view_timetable():
     documents = stucollections.find(
@@ -354,13 +352,6 @@ def view_data():
 
 
 # here we are assigning the classname and seat num for each class
-# -issue-:stuarrange.txt is a template or skeleton for our seating arrangement.
-    # the layout of each class is designed in this skeleton file
-    # later in /seating this skeleton is used for seating the students
-    # the columns and rows should be made according to the classroom layout provided
-# -issue-:Only the available classes should be included in this.
-    # the available classes are chosen by the admin in /admin
-    # seats should be assigned accordingly
 @app.route('/details', methods=['POST'])
 def details():
     items = request.form.getlist('item[]')
@@ -370,62 +361,23 @@ def details():
     class_data = []
     class_name = ''
     seats = 0
+    class_details = {
+        'ADM 303': {'class_name': 'ADM 303', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 304': {'class_name': 'ADM 304', 'columns': 8, 'rows': 3, 'seats': 40},
+        'ADM 305': {'class_name': 'ADM 305', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 306': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 307': {'class_name': 'ADM 307', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 308': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 309': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 310': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 310': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
+        'EAB 206': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
+    }
+
     for item in items:
-        if item == 'ADM 303':
-            class_name = 'ADM 303'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'ADM 304':
-            class_name = 'ADM 304'
-            columns = 8
-            rows = 3
-            seats = 40
-        elif item == 'ADM 305':
-            class_name = 'ADM 305'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'ADM 306':
-            class_name = 'ADM 306'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'ADM 307':
-            class_name = 'ADM 307'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'ADM 308':
-            class_name = 'ADM 308'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'ADM 309':
-            class_name = 'ADM 309'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'ADM 310':
-            class_name = 'ADM 310'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 407':
-            class_name = 'EAB 407'
-            columns = 5
-            rows = 3
-            seats = 40
-        elif item == 'EAB 106':
-            class_name = 'EAB 106'
-            columns = 3
-            rows = 3
-            seats = 40
-        elif item == 'EAB 206':
-            class_name = 'EAB 206'
-            columns = 7
-            rows = 3
-            seats = 40
+        if item in class_details:
+            class_data.append(class_details[item])
+            seats = class_details[item].get('seats', seats)
         elif item == 'EAB 306':
             class_name = 'EAB 306'
             columns = 7
@@ -552,12 +504,6 @@ def details():
         class_data.append(
             {"column": str(columns),
              "rows": str(rows), "a": [], "b": [], "class_name": class_name})
-        # max_rows = 7
-        # max_columns = 6
-        # seats_per_bench = 2
-        # columns = min(max_columns, (seats + (seats_per_bench *
-        #               max_rows) - 1) // (seats_per_bench * max_rows))
-        # rows = min(max_rows, (seats + seats_per_bench - 1) // seats_per_bench)
 
     with open('static/stuarrange.txt', 'w') as f:
         json.dump(class_data, f, indent=4)
@@ -650,6 +596,7 @@ def seating():
             with open('static/stuarrange'+date+'.txt', 'w') as f:
                 json.dump(newlist, f, indent=4)
             filled = True
+            
     return "Completed"
 
 # tesing out
