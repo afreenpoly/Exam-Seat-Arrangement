@@ -1,51 +1,44 @@
 [
     {
-        "column": "7",
-        "rows": "3",
-        "a": [],
-        "b": [],
-        "class_name": "ADM 303"
+        "class_name": "ADM 303",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
     },
     {
-        "column": "8",
-        "rows": "3",
-        "a": [],
-        "b": [],
-        "class_name": "ADM 304"
+        "class_name": "ADM 304",
+        "column": 8,
+        "rows": 3,
+        "seats": 40
     },
     {
-        "column": "3",
-        "rows": "3",
-        "a": [],
-        "b": [],
-        "class_name": "EAB 106"
+        "class_name": "EAB 206",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
     },
     {
-        "column": "7",
-        "rows": "3",
-        "a": [],
-        "b": [],
-        "class_name": "EAB 206"
+        "class_name": "EAB 306",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
     },
     {
-        "column": "8",
-        "rows": "3",
-        "a": [],
-        "b": [],
-        "class_name": "WAB 206"
+        "class_name": "WAB 105",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
     },
     {
-        "column": "7",
-        "rows": "3",
-        "a": [],
-        "b": [],
-        "class_name": "WAB 105"
+        "class_name": "EAB 415",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
     },
     {
-        "column": "7",
-        "rows": "3",
-        "a": [],
-        "b": [],
-        "class_name": "EAB 415"
+        "class_name": "WAB 412",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
     }
 ]

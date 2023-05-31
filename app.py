@@ -97,7 +97,6 @@ def student():
 
 # page for uploading student details
 
-
 @app.route('/uploaddata', methods=['GET'])
 def uploadpage():
     return render_template('studentdataupload.html')
@@ -355,163 +354,54 @@ def view_data():
 @app.route('/details', methods=['POST'])
 def details():
     items = request.form.getlist('item[]')
-    print(items)
-    columns = 0
-    rows = 0
     class_data = []
-    class_name = ''
-    seats = 0
     class_details = {
-        'ADM 303': {'class_name': 'ADM 303', 'columns': 7, 'rows': 3, 'seats': 40},
-        'ADM 304': {'class_name': 'ADM 304', 'columns': 8, 'rows': 3, 'seats': 40},
-        'ADM 305': {'class_name': 'ADM 305', 'columns': 7, 'rows': 3, 'seats': 40},
-        'ADM 306': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
-        'ADM 307': {'class_name': 'ADM 307', 'columns': 7, 'rows': 3, 'seats': 40},
-        'ADM 308': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
-        'ADM 309': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
-        'ADM 310': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
-        'ADM 310': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
-        'EAB 206': {'class_name': 'ADM 306', 'columns': 7, 'rows': 3, 'seats': 40},
+        'ADM 303': {'class_name': 'ADM 303', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 304': {'class_name': 'ADM 304', 'column': 8, 'rows': 3, 'seats': 40},
+        'ADM 305': {'class_name': 'ADM 305', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 306': {'class_name': 'ADM 306', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 307': {'class_name': 'ADM 307', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 308': {'class_name': 'ADM 308', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 309': {'class_name': 'ADM 309', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 310': {'class_name': 'ADM 310', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 311': {'class_name': 'ADM 311', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 206': {'class_name': 'EAB 206', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 306': {'class_name': 'EAB 306', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 401': {'class_name': 'EAB 401', 'column': 8, 'rows': 3, 'seats': 40},
+        'EAB 304': {'class_name': 'EAB 304', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 303': {'class_name': 'EAB 303', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 104': {'class_name': 'EAB 104', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 103': {'class_name': 'EAB 103', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 203': {'class_name': 'EAB 203', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 204': {'class_name': 'EAB 204', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 206': {'class_name': 'WAB 206', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 105': {'class_name': 'WAB 105', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 107': {'class_name': 'WAB 107', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 207': {'class_name': 'WAB 207', 'column': 8, 'rows': 3, 'seats': 40},
+        'WAB 212': {'class_name': 'WAB 212', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 210': {'class_name': 'WAB 210', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 211': {'class_name': 'WAB 211', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 205': {'class_name': 'WAB 205', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 305': {'class_name': 'WAB 305', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 303': {'class_name': 'WAB 303', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 403': {'class_name': 'WAB 403', 'column': 7, 'rows': 3, 'seats': 40},
+        'WAB 405': {'class_name': 'WAB 405', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 415': {'class_name': 'EAB 415', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 416': {'class_name': 'EAB 416', 'column': 8, 'rows': 3, 'seats': 40},
+        'WAB 412': {'class_name': 'WAB 412', 'column': 7, 'rows': 3, 'seats': 40},
+        'EAB 310': {'class_name': 'EAB 310', 'column': 7, 'rows': 3, 'seats': 40},
     }
-
+    
     for item in items:
         if item in class_details:
             class_data.append(class_details[item])
-            seats = class_details[item].get('seats', seats)
-        elif item == 'EAB 306':
-            class_name = 'EAB 306'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 401':
-            class_name = 'EAB 401'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 405':
-            class_name = 'EAB 405'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 304':
-            class_name = 'EAB 304'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 303':
-            class_name = 'EAB 303'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 104':
-            class_name = 'EAB 104'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 103':
-            class_name = 'EAB 103'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 203':
-            class_name = 'EAB 203'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 204':
-            class_name = 'EAB 204'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 206':
-            class_name = 'WAB 206'
-            columns = 8
-            rows = 3
-            seats = 40
-        elif item == 'WAB 105':
-            class_name = 'WAB 105'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 106':
-            class_name = 'WAB 106'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 107':
-            class_name = 'WAB 107'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 207':
-            class_name = 'WAB 207'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 212':
-            class_name = 'WAB 212'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 210':
-            class_name = 'WAB 210'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 211':
-            class_name = 'WAB 211'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 205':
-            class_name = 'WAB 205'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 305':
-            class_name = 'WAB 305'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 303':
-            class_name = 'WAB 303'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 403':
-            class_name = 'WAB 403'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'WAB 405':
-            class_name = 'WAB 405'
-            columns = 7
-            rows = 3
-            seats = 40
-        elif item == 'EAB 415':
-            class_name = 'EAB 415'
-            seats = 150
-        elif item == 'EAB 416':
-            class_name = 'EAB 416'
-            seats = 140
-        elif item == 'WAB 412':
-            class_name = 'WAB 412'
-            seats = 50
-        elif item == 'EAB 310':
-            class_name = 'EAB 310'
-            seats = 50
-    
-        class_data.append(
-            {"column": str(columns),
-             "rows": str(rows), "a": [], "b": [], "class_name": class_name})
+
 
     with open('static/stuarrange.txt', 'w') as f:
         json.dump(class_data, f, indent=4)
 
     global filled
     filled = False
-
-    print(class_data)
     return render_template('classdetails.html')
 
 
@@ -543,12 +433,12 @@ def seating():
                         tempdict = dict(item)
                         tempdict["_id"] = item1
                         listy.append(tempdict)
-            print(listyy)
             with open('static/stuarrange.txt', 'r') as stufiles:
                 stulist = json.load(stufiles)
             for i in stulist:
                 i["a"] = []
                 i["b"] = []
+                class_name = i.get("class_name")
                 if len(listy) == 0:
                     break
                 a = math.ceil(int(i["column"])/2)*int(i["rows"])
@@ -566,7 +456,7 @@ def seating():
                         listy.pop(0)
                     i["a"].append(firstitem["ro"][0])
                     seatinfo = [
-                        {"date": date, "seatnum": "a" + str(len(i["a"]))}]
+                        {"date": date, "seatnum": "a" + str(len(i["a"])), "classroom": class_name}]
                     stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                         "$addToSet": {"seatnum": seatinfo}})
                     firstitem["ro"].pop(0)
@@ -586,7 +476,7 @@ def seating():
                         break
                     i["b"].append(firstitem["ro"][0])
                     seatinfo = [
-                        {"date": date, "seatnum": "a" + str(len(i["a"]))}]
+                        {"date": date, "seatnum": "a" + str(len(i["a"])), "classroom": class_name}]
                     stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                         "$addToSet": {"seatnum": seatinfo}})
                     firstitem["ro"].pop(0)
@@ -600,13 +490,28 @@ def seating():
     return "Completed"
 
 # tesing out
-
-
-@app.route('/test', methods=['GET'])
-def test():
+@app.route('/reset', methods=['GET'])
+def reset():
     global filled
     filled = False
-    return "Unfilled"
+    usercollections.drop()  # Drop the 'users' collection
+    stucollections.drop()  # Drop the 'student' collection
+    global dates
+    dates=[]
+    with open('static/dates.txt', 'w') as f:
+        json.dump(dates, f, indent=4)
+    folder_path = 'static'
+    files = os.listdir(folder_path)
+    for file in files:
+        if file.startswith("stuarrange"):
+            file_path = os.path.join(folder_path, file)
+            os.remove(file_path)
+    folder_path= 'uploads'
+    files = os.listdir(folder_path)
+    for file in files:
+        file_path = os.path.join(folder_path, file)
+        os.remove(file_path)
+    return "Resetted"
 
 
 # main function
