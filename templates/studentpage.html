@@ -12,8 +12,15 @@
       </form>
       {% if roll_num %}
       <p>Roll Number: {{roll_num}}</p>
-      <p>Seat Number: {{seat_num}}</p>
-      {% endif %}
-      <a href="/">Home</a>
+      <p>Exam Hall Details:</p>
+    <ul>
+        {% for seat in seat_num %}
+        <li>Date: {{ seat[0]['date'] }}</li>
+        <li>Seat Number: {{ seat[0]['seatnum'] }}</li>
+        <li>Classroom: {{ seat[0]['classroom'] }}</li>
+        <br>
+        {% endfor %}
+    </ul>
+    {% endif %}
     </body>
 </html>

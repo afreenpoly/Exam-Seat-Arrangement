@@ -489,29 +489,36 @@ def seating():
             
     return "Completed"
 
-# tesing out
-@app.route('/reset', methods=['GET'])
-def reset():
+#Resetting everything out
+@app.route('/reset/collections', methods=['GET'])
+def reset_collections():
     global filled
     filled = False
     usercollections.drop()  # Drop the 'users' collection
     stucollections.drop()  # Drop the 'student' collection
-    global dates
-    dates=[]
+    return "Collections resetted"
+
+@app.route('/reset/static', methods=['GET'])
+def reset_static():
     with open('static/dates.txt', 'w') as f:
-        json.dump(dates, f, indent=4)
+        json.dump([], f, indent=4)
     folder_path = 'static'
     files = os.listdir(folder_path)
     for file in files:
         if file.startswith("stuarrange"):
             file_path = os.path.join(folder_path, file)
             os.remove(file_path)
-    folder_path= 'uploads'
+    return "Static resetted"
+
+@app.route('/reset/uploads', methods=['GET'])
+def reset_uploads():
+    folder_path = 'uploads'
     files = os.listdir(folder_path)
     for file in files:
         file_path = os.path.join(folder_path, file)
         os.remove(file_path)
-    return "Resetted"
+    return "Uploads resetted"
+
 
 
 # main function
