@@ -94,9 +94,14 @@ def student():
         return render_template('studentpage.html', roll_num=roll, seat_num=seatnum)
     else:
         return render_template('studentpage.html')
+    
+
+@app.route('/class', methods=['GET'])
+def classchoose():
+    return render_template('classavailable.html')
+
 
 # page for uploading student details
-
 @app.route('/uploaddata', methods=['GET'])
 def uploadpage():
     return render_template('studentdataupload.html')
@@ -487,16 +492,20 @@ def seating():
                 json.dump(newlist, f, indent=4)
             filled = True
             
-    return "Completed"
-
+    return render_template('seating.html')
+                           
 #Resetting everything out
+
+
 @app.route('/reset/collections', methods=['GET'])
 def reset_collections():
     global filled
     filled = False
     usercollections.drop()  # Drop the 'users' collection
     stucollections.drop()  # Drop the 'student' collection
-    return "Collections resetted"
+    message = "Student data has been deleted."
+    return render_template('reset.html', message=message)
+
 
 @app.route('/reset/static', methods=['GET'])
 def reset_static():
@@ -508,7 +517,9 @@ def reset_static():
         if file.startswith("stuarrange"):
             file_path = os.path.join(folder_path, file)
             os.remove(file_path)
-    return "Static resetted"
+    message = "Static files have been reset."
+    return render_template('reset.html', message=message)
+
 
 @app.route('/reset/uploads', methods=['GET'])
 def reset_uploads():
@@ -517,7 +528,9 @@ def reset_uploads():
     for file in files:
         file_path = os.path.join(folder_path, file)
         os.remove(file_path)
-    return "Uploads resetted"
+    message = "Uploads have been reset."
+    return render_template('reset.html', message=message)
+
 
 
 

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset Page</title>
+</head>
+<body>
+    <h1>Reset Page</h1>
+    <ul>
+        <li><a href="/reset/collections">Delete Student Data</a></li>
+        <li><a href="/reset/static">Reset Static</a></li>
+        <li><a href="/reset/uploads">Reset Uploads</a></li>
+    </ul>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+</body>
+</html>
