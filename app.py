@@ -407,7 +407,7 @@ def details():
 
     global filled
     filled = False
-    return render_template('classdetails.html')
+    return render_template('classdetails.html',class_data=class_data)
 
 
 # here the seating is done
@@ -481,7 +481,7 @@ def seating():
                         break
                     i["b"].append(firstitem["ro"][0])
                     seatinfo = [
-                        {"date": date, "seatnum": "a" + str(len(i["a"])), "classroom": class_name}]
+                        {"date": date, "seatnum": "b" + str(len(i["b"])), "classroom": class_name}]
                     stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                         "$addToSet": {"seatnum": seatinfo}})
                     firstitem["ro"].pop(0)
@@ -495,6 +495,11 @@ def seating():
     return render_template('seating.html')
                            
 #Resetting everything out
+
+
+@app.route('/reset', methods=['GET'])
+def reset():
+    return render_template('reset.html')
 
 
 @app.route('/reset/collections', methods=['GET'])

@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Class Details</title>
   </head>
   <body>
-    <h1>ClassRoom Structure</h1>
-    {{columns }}
+    <h1>ClassRooms</h1>
+    {% for classroom in class_data %}
+    <ul>
+      <li>{{ classroom['class_name'] }}</li>
+    </ul>
+    {% endfor %}
+
+    <a href="/admin">Go Home</a>
   </body>
 </html>
