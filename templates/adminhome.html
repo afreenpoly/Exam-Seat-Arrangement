@@ -10,45 +10,79 @@
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
-    <style>
-      .custom-col {
-        margin: 20px;
-      }
-      div {
-        text-align: left;
-      }
-
-    </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-color" style="background-color: #ece5c7">
-  <div class="container">
-    <a class="navbar-brand" href="#">Admin Panel</a>
+    <div class="container py-3">
+      <header>
+        <div
+          class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom"
+        >
+          <a
+            href="#"
+            class="d-flex align-items-center link-body-emphasis text-decoration-none"
+          >
+            <span class="fs-4">Admin Panel</span>
+          </a>
 
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a href="/" target="_blank" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item">
-        <a href="/viewdata" target="_blank" class="nav-link">View Data</a>
-      </li>
-      <li class="nav-item">
-        <a href="/viewtimetable" target="_blank" class="nav-link">View Timetable</a>
-      </li>
-      <li class="nav-item">
-        <a href="/reset" target="_blank" class="nav-link">Reset Data</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+          <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+            <a
+              class="me-3 py-2 link-body-emphasis text-decoration-none"
+              href="/"
+              >Home</a
+            >
+            <a
+              class="me-3 py-2 link-body-emphasis text-decoration-none"
+              href="/viewdata"
+              >View Data</a
+            >
+            <a
+              class="me-3 py-2 link-body-emphasis text-decoration-none"
+              href="/viewtimetable"
+              >View Timetable</a
+            >
+            <a
+              class="py-2 link-body-emphasis text-decoration-none"
+              href="/reset"
+              >Reset Data</a
+            >
+          </nav>
+        </div>
+      </header>
+    </div>
+
+    <div class="container col-xxl-8 px-4 py-5">
+      <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+          <img
+            src="___screenshot____"
+            class="d-block mx-lg-auto img-fluid"
+            alt="Screenshot"
+            width="700"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="col-lg-6">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            Choose the available classes
+          </h1>
+          <p class="lead">Here choose the available classes.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a
+              href="/class"
+              target="_blank"
+              class="btn btn-primary btn-lg px-4 me-md-2"
+              >Choose Class
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="container">
       <div class="row">
         <div class="col custom-col">
           <h2>Step.1 Choose the available classes</h2>
-          <a href="/class" target="_blank" class="btn btn-primary float-end"
-            >Choose Class</a
-          >
         </div>
       </div>
       <div class="row">

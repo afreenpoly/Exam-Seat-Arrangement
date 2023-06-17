@@ -49,7 +49,7 @@ def register():
         else:
             usercollections.insert_one(
                 {'username': username, 'password': password})
-            flash('Registration successful!', 'success')
+            flash('Registration successful!', 'registration-success')
             return redirect(url_for('login'))
     else:
         return render_template('adminlogin.html')
@@ -74,8 +74,6 @@ def login():
 
 
 # main page of admin where he can choose the classes
-# -issue-:the classes chosen should used in /details for more processing,
-    # these are the available classes where the students should be seated
 @app.route('/admin')
 def admin():
     return render_template('adminhome.html')
@@ -425,6 +423,7 @@ def seating():
             stulist = json.load(stufiles)
         return render_template('seating.html', newlist=stulist)
     else:
+        stucollections.update_many({}, {"$unset": {"seatnum": ""}})
         for date in dates:
             global listyy
             listyy = []
@@ -538,6 +537,10 @@ def reset_uploads():
     return render_template('reset.html', message=message)
 
 
+@app.route('/test', methods=['GET'])
+def test():
+    stucollections.update_many({}, {"$unset": {"seatnum": ""}})
+    return("done")
 
 
 # main function

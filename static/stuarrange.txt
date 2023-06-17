@@ -6,25 +6,31 @@
         "seats": 40
     },
     {
-        "class_name": "ADM 306",
+        "class_name": "ADM 304",
+        "column": 8,
+        "rows": 3,
+        "seats": 40
+    },
+    {
+        "class_name": "EAB 304",
         "column": 7,
         "rows": 3,
         "seats": 40
     },
     {
-        "class_name": "EAB 203",
+        "class_name": "EAB 103",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
+    },
+    {
+        "class_name": "WAB 206",
         "column": 7,
         "rows": 3,
         "seats": 40
     },
     {
         "class_name": "WAB 105",
-        "column": 7,
-        "rows": 3,
-        "seats": 40
-    },
-    {
-        "class_name": "EAB 415",
         "column": 7,
         "rows": 3,
         "seats": 40

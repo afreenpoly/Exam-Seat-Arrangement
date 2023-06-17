@@ -132,16 +132,25 @@
           </button>
         </form>
         {% with messages = get_flashed_messages(category_filter=['registration-error', 'registration-success']) %}
-  {% if messages %}
-    <div class="alert alert-danger mt-3">
-      <ul class="list-unstyled mb-0">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-{% endwith %}
+          {% if messages %}
+            {% for message in messages %}
+              {% if 'registration-success' in message %}
+                <div class="alert alert-success">
+                  <ul class="list-unstyled mb-0">
+                    <li>{{ message }}</li>
+                  </ul>
+                </div>
+              {% else %}
+                <div class="alert alert-danger mt-3">
+                  <ul class="list-unstyled mb-0">
+                    <li>{{ message }}</li>
+                  </ul>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
       </div>
     </div>
   </div>
