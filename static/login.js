@@ -53,25 +53,25 @@ passwordInput.addEventListener("input", () => {
   }
 });
 
-// Select the password input field and create a new button element
-const toggleButton = document.createElement("button");
+// // Select the password input field and create a new button element
+// const toggleButton = document.createElement("button");
 
-// Set the text and type of the toggle button
-toggleButton.innerText = "Show";
-toggleButton.type = "button";
+// // Set the text and type of the toggle button
+// toggleButton.innerText = "Show";
+// toggleButton.type = "button";
 
-// Add a click event listener to toggle the password visibility
-toggleButton.addEventListener("click", () => {
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    toggleButton.innerText = "Hide";
-  } else {
-    passwordInput.type = "password";
-    toggleButton.innerText = "Show";
-  }
-});
+// // Add a click event listener to toggle the password visibility
+// toggleButton.addEventListener("click", () => {
+//   if (passwordInput.type === "password") {
+//     passwordInput.type = "text";
+//     toggleButton.innerText = "Hide";
+//   } else {
+//     passwordInput.type = "password";
+//     toggleButton.innerText = "Show";
+//   }
+// });
 
-// Add the toggle button to the DOM
-passwordInput.parentNode.appendChild(toggleButton);
+// // Add the toggle button to the DOM
+// passwordInput.parentNode.appendChild(toggleButton);
 
 

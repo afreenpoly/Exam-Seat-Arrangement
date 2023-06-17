@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <head>
     <title>Home</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
 </head>
 <body>
-    <h2>Welcome to</h2>
-    <h1>Exam Seating Arrangement System</h1>
-    <a href="/student">Go to Student Page</a>
-    <br><br>
-    <a href="/admin/login">Go to Admin Page</a>
+    <div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='book.jpg') }}" alt="" width="72" height="57">
+    <h1 class="display-5 fw-bold text-body-emphasis">Exam Seat Arrangement System</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-3">The Exam Seating Arrangement System is a web application that automatically arranges students for exams in a fair and equitable manner, while also preventing malpractice. The system uses a algorithm and heuristics to arrange students, ensuring that they are evenly distributed across the exam rooms and that they are not able to cheat. The system is designed to be used by all departments and years at the university, and it is expected to save time and resources for staff.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="/student" class="btn btn-primary btn-lg px-4 gap-3">Go to Student Page</a>
+        <a href="/admin/login" class="btn btn-outline-secondary btn-lg px-4">Go to Admin Page</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+
+

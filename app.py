@@ -44,7 +44,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         if usercollections.find_one({'username': username}):
-            flash('Username already exists', 'error')
+            flash('Username already exists', 'registration-error')
             return redirect(url_for('register'))
         else:
             usercollections.insert_one(
@@ -67,6 +67,7 @@ def login():
             session['username'] = username
             return redirect(url_for('admin'))
         else:
+            flash('Invalid username or password', 'login-error')
             return redirect(url_for('login'))
     else:
         return render_template('adminlogin.html')
@@ -492,7 +493,7 @@ def seating():
                 json.dump(newlist, f, indent=4)
             filled = True
             
-    return render_template('seating.html')
+    return render_template('seating.html',message="done")
                            
 #Resetting everything out
 

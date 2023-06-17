@@ -6,8 +6,14 @@
         "seats": 40
     },
     {
-        "class_name": "ADM 304",
-        "column": 8,
+        "class_name": "ADM 306",
+        "column": 7,
+        "rows": 3,
+        "seats": 40
+    },
+    {
+        "class_name": "EAB 203",
+        "column": 7,
         "rows": 3,
         "seats": 40
     },
