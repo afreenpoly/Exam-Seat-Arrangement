@@ -149,23 +149,25 @@ def upload_file():
     else:
         data4 = None
 
-    if data2 is not None and data3 is not None and data4 is not None:
-        stucollections.delete_many({})
+    if data2 is not None:
         for sheet_name, sheet_data in data2.items():
             stucollections.insert_many([
-                {**item, "sheet_name": sheet_name, "Year": "SecondYear",
-                 "classroom": None} for item in sheet_data
+                {**item, "sheet_name": sheet_name, "Year": "SecondYear", "classroom": None} for item in sheet_data
             ])
+
+
+    if data3 is not None:
         for sheet_name, sheet_data in data3.items():
             stucollections.insert_many([
-                {**item, "sheet_name": sheet_name, "Year": "ThirdYear",
-                 "classroom": None} for item in sheet_data
+                {**item, "sheet_name": sheet_name, "Year": "ThirdYear", "classroom": None} for item in sheet_data
             ])
+
+    if data4 is not None:
         for sheet_name, sheet_data in data4.items():
             stucollections.insert_many([
-                {**item, "sheet_name": sheet_name, "Year": "FourthYear",
-                 "classroom": None} for item in sheet_data
+                {**item, "sheet_name": sheet_name, "Year": "FourthYear", "classroom": None} for item in sheet_data
             ])
+
     global listy
     listy = []
     details = []
