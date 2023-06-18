@@ -1,55 +1,92 @@
 <!DOCTYPE html>
-<head>
+<html>
+  <head>
     <title>Student Data</title>
-</head>
-<body>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-      <!-- <h3>First Year</h3>
-      <label for="file"></label>
-      <input
-        type="file"
-        name="file1"
-        id="file1"
-        accept=".xls,.xlsx"
-        multiple
-      /><br /><br /> -->
-      
-      <h3>Second Year</h3>
-      <label for="file"></label>
-      <input
-        type="file"
-        name="file2"
-        id="file2"
-        accept=".xls,.xlsx"
-        multiple
-      /><br /><br />
-      
-      
-      <h3>Third Year</h3>
-      <label for="file"></label>
-      <input
-        type="file"
-        name="file3"
-        id="file3"
-        accept=".xls,.xlsx"
-        multiple
-      /><br /><br />
-      
-      <h3>Fourth Year</h3>
-      <label for="file"></label>
-      <input
-        type="file"
-        name="file4"
-        id="file4"
-        accept=".xls,.xlsx"
-        multiple
-      /><br /><br />
-      <input type="submit" value="Upload File" />
-      {% with messages = get_flashed_messages() %} {% if messages %}
-      <p class="flashes">
-        {% for message in messages %} {{ message }} {% endfor %}
-      </p>
-      {% endif %} {% endwith %}
-    </form>
-</body>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container py-3">
+      <header>
+        <div
+          class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom"
+        >
+          <a
+            href="#"
+            class="d-flex align-items-center link-body-emphasis text-decoration-none"
+          >
+            <span class="fs-4">Student Data</span>
+          </a>
+          <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+            <a
+              class="me-3 py-2 link-body-emphasis text-decoration-none"
+              href="/admin"
+              >Home</a
+            >
+          </nav>
+        </div>
+      </header>
+    </div>
+
+    <div class="container">
+      <form action="/upload" method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <h3>Second Year</h3>
+              <input
+                type="file"
+                class="form-control-file"
+                name="file2"
+                id="file2"
+                accept=".xls,.xlsx"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <h3>Third Year</h3>
+              <input
+                type="file"
+                class="form-control-file"
+                name="file3"
+                id="file3"
+                accept=".xls,.xlsx"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <h3>Fourth Year</h3>
+              <input
+                type="file"
+                class="form-control-file"
+                name="file4"
+                id="file4"
+                accept=".xls,.xlsx"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <input type="submit" class="btn btn-primary" value="Upload File" />
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %} {% if category ==
+        'success' %}
+        <div class="alert alert-success mt-4" style="width: fit-content">
+          {{ message }}
+        </div>
+        {% elif category == 'error' %}
+        <div class="alert alert-danger mt-4" style="width: fit-content">
+          {{ message }}
+        </div>
+        {% endif %} {% endfor %} {% endif %} {% endwith %}
+      </form>
+    </div>
+  </body>
 </html>

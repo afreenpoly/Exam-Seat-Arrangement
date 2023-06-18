@@ -93,7 +93,7 @@ def student():
         return render_template('studentpage.html', roll_num=roll, seat_num=seatnum)
     else:
         return render_template('studentpage.html')
-    
+
 
 @app.route('/class', methods=['GET'])
 def classchoose():
@@ -114,56 +114,66 @@ def uploadpage():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file2' not in request.files or 'file3' not in request.files or 'file4' not in request.files:
-        flash('Error: No file part')
-        return redirect(url_for('admin'))
     file2 = request.files['file2']
     file3 = request.files['file3']
     file4 = request.files['file4']
-    if file2.filename == '' or file3.filename == '' or file4.filename == '':
-        flash('No selected file')
-        return redirect(url_for('admin'))
-    if file2.filename and file3.filename and file4.filename:
-        filename2 = secure_filename(file2.filename)
-        filename3 = secure_filename(file3.filename)
-        filename4 = secure_filename(file4.filename)
-        file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
-        file3.save(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
-        file4.save(os.path.join(app.config['UPLOAD_FOLDER'], filename4))
 
-        global data2, data3, data4
+    if file2.filename == '' and file3.filename == '' and file4.filename == '':
+        flash('No files uploaded', 'error')
+        return render_template('studentdataupload.html')
+
+    if file2.filename:
+        filename2 = secure_filename(file2.filename)
+        file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+        global data2
         data2 = excel_to_json(os.path.join(
             app.config['UPLOAD_FOLDER'], filename2))
+    else:
+        data2 = None
+
+    if file3.filename:
+        filename3 = secure_filename(file3.filename)
+        file3.save(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
+        global data3
         data3 = excel_to_json(os.path.join(
             app.config['UPLOAD_FOLDER'], filename3))
+    else:
+        data3 = None
+
+    if file4.filename:
+        filename4 = secure_filename(file4.filename)
+        file4.save(os.path.join(app.config['UPLOAD_FOLDER'], filename4))
+        global data4
         data4 = excel_to_json(os.path.join(
             app.config['UPLOAD_FOLDER'], filename4))
-        if data2 is not None and data3 is not None and data4 is not None:
-            stucollections.delete_many({})
-            for sheet_name, sheet_data in data2.items():
-                stucollections.insert_many([
-                    {**item, "sheet_name": sheet_name, "Year": "SecondYear",
-                     "classroom": None} for item in sheet_data
-                ])
-            for sheet_name, sheet_data in data3.items():
-                stucollections.insert_many([
-                    {**item, "sheet_name": sheet_name, "Year": "ThirdYear",
-                     "classroom": None} for item in sheet_data
-                ])
-            for sheet_name, sheet_data in data4.items():
-                stucollections.insert_many([
-                    {**item, "sheet_name": sheet_name, "Year": "FourthYear",
-                     "classroom": None} for item in sheet_data
-                ])
-        global listy
-        listy = []
-        details = []
-        details = stucollections.aggregate(
-            [{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
-        for i in details:
-            listy.append(i)
     else:
-        data2 = data3 = data4 = None
+        data4 = None
+
+    if data2 is not None and data3 is not None and data4 is not None:
+        stucollections.delete_many({})
+        for sheet_name, sheet_data in data2.items():
+            stucollections.insert_many([
+                {**item, "sheet_name": sheet_name, "Year": "SecondYear",
+                 "classroom": None} for item in sheet_data
+            ])
+        for sheet_name, sheet_data in data3.items():
+            stucollections.insert_many([
+                {**item, "sheet_name": sheet_name, "Year": "ThirdYear",
+                 "classroom": None} for item in sheet_data
+            ])
+        for sheet_name, sheet_data in data4.items():
+            stucollections.insert_many([
+                {**item, "sheet_name": sheet_name, "Year": "FourthYear",
+                 "classroom": None} for item in sheet_data
+            ])
+    global listy
+    listy = []
+    details = []
+    details = stucollections.aggregate(
+        [{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
+    for i in details:
+        listy.append(i)
+
     return render_template('uploadeddata.html', data2=data2, data3=data3, data4=data4)
 
 # page for displaying the data via "GET" method
@@ -184,6 +194,10 @@ def timetable():
         file3 = request.files['file3']
         file4 = request.files['file4']
 
+        if not file2 and not file3 and not file4:
+            flash('No files uploaded', 'error')
+            return render_template('timetableupload.html')
+
         # Check if file2 is uploaded
         if file2.filename:
             filename2 = secure_filename(file2.filename)
@@ -191,7 +205,9 @@ def timetable():
             global timetable2
             timetable2 = excel_to_json(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename2))
-            print(timetable2)
+        else:
+            timetable2 = None
+
         # Check if file3 is uploaded
         if file3.filename:
             filename3 = secure_filename(file3.filename)
@@ -199,7 +215,9 @@ def timetable():
             global timetable3
             timetable3 = excel_to_json(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename3))
-            print(timetable3)
+        else:
+            timetable3 = None
+
         # Check if file4 is uploaded
         if file4.filename:
             filename4 = secure_filename(file4.filename)
@@ -207,7 +225,8 @@ def timetable():
             global timetable4
             timetable4 = excel_to_json(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename4))
-            print(timetable4)
+        else:
+            timetable4 = None
 
         # "Year" field is set to "SecondYear"
         # creates a list of the "_id" field values for those documents.
@@ -285,6 +304,7 @@ def timetable():
                     "_id": {"$in": third_year_student_ids}},
                 {"$set": {"subject": timetable3["eee"]}}
             )
+
         if timetable4 is not None:
             for sheet_name, subjects in timetable4.items():
                 for subject in subjects:
@@ -311,11 +331,15 @@ def timetable():
 
         with open('static/dates.txt', 'w') as f:
             json.dump(dates, f, indent=4)
-        return render_template('timetableupload.html', status="successful")
-    else:
+            flash('Upload successful', 'success')
         return render_template('timetableupload.html')
+    else:
+        flash('Upload failed', 'danger')
+    return render_template('timetableupload.html')
 
 # the timetable is fetched and displayed here
+
+
 @app.route('/viewtimetable', methods=['GET'])
 def view_timetable():
     documents = stucollections.find(
@@ -395,18 +419,17 @@ def details():
         'WAB 412': {'class_name': 'WAB 412', 'column': 7, 'rows': 3, 'seats': 40},
         'EAB 310': {'class_name': 'EAB 310', 'column': 7, 'rows': 3, 'seats': 40},
     }
-    
+
     for item in items:
         if item in class_details:
             class_data.append(class_details[item])
-
 
     with open('static/stuarrange.txt', 'w') as f:
         json.dump(class_data, f, indent=4)
 
     global filled
     filled = False
-    return render_template('classdetails.html',class_data=class_data)
+    return render_template('classdetails.html', class_data=class_data)
 
 
 # here the seating is done
@@ -491,10 +514,10 @@ def seating():
             with open('static/stuarrange'+date+'.txt', 'w') as f:
                 json.dump(newlist, f, indent=4)
             filled = True
-            
-    return render_template('seating.html',message="done")
-                           
-#Resetting everything out
+
+    return render_template('seating.html', message="done")
+
+# Resetting everything out
 
 
 @app.route('/reset', methods=['GET'])
@@ -540,7 +563,7 @@ def reset_uploads():
 @app.route('/test', methods=['GET'])
 def test():
     stucollections.update_many({}, {"$unset": {"seatnum": ""}})
-    return("done")
+    return ("done")
 
 
 # main function
