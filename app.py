@@ -80,7 +80,7 @@ def admin():
     return render_template('adminhome.html')
 
 
-#When student enters their rollnumber
+# When student enters their rollnumber
     # their corresponding seating should be displayed
 @app.route('/student', methods=['GET', 'POST'])
 def student():
@@ -154,7 +154,6 @@ def upload_file():
             stucollections.insert_many([
                 {**item, "sheet_name": sheet_name, "Year": "SecondYear", "classroom": None} for item in sheet_data
             ])
-
 
     if data3 is not None:
         for sheet_name, sheet_data in data3.items():
@@ -386,9 +385,6 @@ def timetable():
                     "_id": {"$in": third_year_student_ids}},
                 {"$set": {"subject": timetable3["rb"]}}
             )
-            
-            
-            
 
         if timetable4 is not None:
             for sheet_name, subjects in timetable4.items():
@@ -443,8 +439,6 @@ def timetable():
                     "_id": {"$in": fourth_year_student_ids}},
                 {"$set": {"subject": timetable4["mr"]}}
             )
-
-
 
         with open('static/dates.txt', 'w') as f:
             json.dump(dates, f, indent=4)
@@ -635,9 +629,29 @@ def seating():
     flash('Generated', 'success')
     return render_template("adminhome.html")
 
+
+@app.route('/viewseating', methods=['GET'])
+def viewseating():
+    global filled
+    if filled:
+        file_list = []
+        # Assumes static folder is defined in your Flask app
+        static_folder = app.static_folder
+        pattern = 'stuarrange?*.txt'
+        for file_name in os.listdir(static_folder):
+            if fnmatch.fnmatch(file_name, pattern):
+                file_path = os.path.join(static_folder, file_name)
+                with open(file_path, 'r') as file:
+                    content = file.read()
+                    file_list.append(content)
+    else:
+        flash('Generate seating', 'error')
+        return render_template("adminhome.html")
+
+    return render_template('seating.html', file_list=file_list)
+
+
 # Resetting everything out
-
-
 @app.route('/reset', methods=['GET'])
 def reset():
     return render_template('reset.html')
@@ -657,6 +671,7 @@ def reset_users():
     usercollections.drop()  # Drop the 'users' collection
     message = "Users has been deleted."
     return render_template('reset.html', message=message)
+
 
 @app.route('/reset/static', methods=['GET'])
 def reset_static():
