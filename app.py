@@ -3,6 +3,7 @@ from datetime import datetime
 from static.converter import excel_to_json
 import os
 import math
+import fnmatch
 import json
 import pymongo
 from werkzeug.utils import secure_filename
@@ -79,8 +80,7 @@ def admin():
     return render_template('adminhome.html')
 
 
-# currently not working
-# -issue-: When student enters their rollnumber and a particular date .
+#When student enters their rollnumber
     # their corresponding seating should be displayed
 @app.route('/student', methods=['GET', 'POST'])
 def student():
@@ -270,17 +270,57 @@ def timetable():
             stucollections.update_many(
                 {"sheet_name": "csa", "Year": "SecondYear",
                     "_id": {"$in": second_year_student_ids}},
-                {"$set": {"subject": timetable2["csa"]}}
+                {"$set": {"subject": timetable2["cs"]}}
             )
             stucollections.update_many(
                 {"sheet_name": "csb", "Year": "SecondYear",
                     "_id": {"$in": second_year_student_ids}},
-                {"$set": {"subject": timetable2["csb"]}}
+                {"$set": {"subject": timetable2["cs"]}}
             )
             stucollections.update_many(
-                {"sheet_name": "eee", "Year": "SecondYear",
+                {"sheet_name": "ec", "Year": "SecondYear",
                     "_id": {"$in": second_year_student_ids}},
-                {"$set": {"subject": timetable2["eee"]}}
+                {"$set": {"subject": timetable2["ec"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "ee", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["ee"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "ad", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["ad"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "ce", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["ce"]}}
+            )
+            # stucollections.update_many(
+            #     {"sheet_name": "mea", "Year": "SecondYear",
+            #         "_id": {"$in": second_year_student_ids}},
+            #     {"$set": {"subject": timetable2["me"]}}
+            # )
+            # stucollections.update_many(
+            #     {"sheet_name": "meb", "Year": "SecondYear",
+            #         "_id": {"$in": second_year_student_ids}},
+            #     {"$set": {"subject": timetable2["me"]}}
+            # )
+            stucollections.update_many(
+                {"sheet_name": "me", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["me"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "mr", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["mr"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "ra", "Year": "SecondYear",
+                    "_id": {"$in": second_year_student_ids}},
+                {"$set": {"subject": timetable2["ra"]}}
             )
 
         if timetable3 is not None:
@@ -294,18 +334,61 @@ def timetable():
             stucollections.update_many(
                 {"sheet_name": "csa", "Year": "ThirdYear",
                     "_id": {"$in": third_year_student_ids}},
-                {"$set": {"subject": timetable3["csa"]}}
+                {"$set": {"subject": timetable3["cs"]}}
             )
             stucollections.update_many(
                 {"sheet_name": "csb", "Year": "ThirdYear",
                     "_id": {"$in": third_year_student_ids}},
-                {"$set": {"subject": timetable3["csb"]}}
+                {"$set": {"subject": timetable3["cs"]}}
             )
             stucollections.update_many(
-                {"sheet_name": "eee", "Year": "ThirdYear",
+                {"sheet_name": "ee", "Year": "ThirdYear",
                     "_id": {"$in": third_year_student_ids}},
-                {"$set": {"subject": timetable3["eee"]}}
+                {"$set": {"subject": timetable3["ee"]}}
             )
+            stucollections.update_many(
+                {"sheet_name": "ec", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["ec"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "mea", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["me"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "meb", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["me"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "me", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["me"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "ce", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["ce"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "mr", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["mr"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "ad", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["ad"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "rb", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["rb"]}}
+            )
+            
+            
+            
 
         if timetable4 is not None:
             for sheet_name, subjects in timetable4.items():
@@ -318,18 +401,50 @@ def timetable():
             stucollections.update_many(
                 {"sheet_name": "csa", "Year": "FourthYear",
                     "_id": {"$in": fourth_year_student_ids}},
-                {"$set": {"subject": timetable4["csa"]}}
+                {"$set": {"subject": timetable4["cs"]}}
             )
             stucollections.update_many(
                 {"sheet_name": "csb", "Year": "FourthYear",
                     "_id": {"$in": fourth_year_student_ids}},
-                {"$set": {"subject": timetable4["csb"]}}
+                {"$set": {"subject": timetable4["cs"]}}
             )
             stucollections.update_many(
-                {"sheet_name": "eee", "Year": "FourthYear",
+                {"sheet_name": "ee", "Year": "FourthYear",
                     "_id": {"$in": fourth_year_student_ids}},
-                {"$set": {"subject": timetable4["eee"]}}
+                {"$set": {"subject": timetable4["ee"]}}
             )
+            stucollections.update_many(
+                {"sheet_name": "ece", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["ece"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "me", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["me"]}}
+            )
+            # stucollections.update_many(
+            #     {"sheet_name": "mea", "Year": "FourthYear",
+            #         "_id": {"$in": fourth_year_student_ids}},
+            #     {"$set": {"subject": timetable4["me"]}}
+            # )
+            # stucollections.update_many(
+            #     {"sheet_name": "meb", "Year": "FourthYear",
+            #         "_id": {"$in": fourth_year_student_ids}},
+            #     {"$set": {"subject": timetable4["me"]}}
+            # )
+            stucollections.update_many(
+                {"sheet_name": "ce", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["ce"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "mr", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["mr"]}}
+            )
+
+
 
         with open('static/dates.txt', 'w') as f:
             json.dump(dates, f, indent=4)
@@ -386,40 +501,40 @@ def details():
     items = request.form.getlist('item[]')
     class_data = []
     class_details = {
-        'ADM 303': {'class_name': 'ADM 303', 'column': 7, 'rows': 3, 'seats': 40},
-        'ADM 304': {'class_name': 'ADM 304', 'column': 8, 'rows': 3, 'seats': 40},
-        'ADM 305': {'class_name': 'ADM 305', 'column': 7, 'rows': 3, 'seats': 40},
-        'ADM 306': {'class_name': 'ADM 306', 'column': 7, 'rows': 3, 'seats': 40},
-        'ADM 307': {'class_name': 'ADM 307', 'column': 7, 'rows': 3, 'seats': 40},
-        'ADM 308': {'class_name': 'ADM 308', 'column': 7, 'rows': 3, 'seats': 40},
-        'ADM 309': {'class_name': 'ADM 309', 'column': 7, 'rows': 3, 'seats': 40},
-        'ADM 310': {'class_name': 'ADM 310', 'column': 7, 'rows': 3, 'seats': 40},
-        'ADM 311': {'class_name': 'ADM 311', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 206': {'class_name': 'EAB 206', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 306': {'class_name': 'EAB 306', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 401': {'class_name': 'EAB 401', 'column': 8, 'rows': 3, 'seats': 40},
-        'EAB 304': {'class_name': 'EAB 304', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 303': {'class_name': 'EAB 303', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 104': {'class_name': 'EAB 104', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 103': {'class_name': 'EAB 103', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 203': {'class_name': 'EAB 203', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 204': {'class_name': 'EAB 204', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 206': {'class_name': 'WAB 206', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 105': {'class_name': 'WAB 105', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 107': {'class_name': 'WAB 107', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 207': {'class_name': 'WAB 207', 'column': 8, 'rows': 3, 'seats': 40},
-        'WAB 212': {'class_name': 'WAB 212', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 210': {'class_name': 'WAB 210', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 211': {'class_name': 'WAB 211', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 205': {'class_name': 'WAB 205', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 305': {'class_name': 'WAB 305', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 303': {'class_name': 'WAB 303', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 403': {'class_name': 'WAB 403', 'column': 7, 'rows': 3, 'seats': 40},
-        'WAB 405': {'class_name': 'WAB 405', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 415': {'class_name': 'EAB 415', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 416': {'class_name': 'EAB 416', 'column': 8, 'rows': 3, 'seats': 40},
-        'WAB 412': {'class_name': 'WAB 412', 'column': 7, 'rows': 3, 'seats': 40},
-        'EAB 310': {'class_name': 'EAB 310', 'column': 7, 'rows': 3, 'seats': 40},
+        'ADM 303': {'class_name': 'ADM 303', 'column': 7, 'rows': 3},
+        'ADM 304': {'class_name': 'ADM 304', 'column': 8, 'rows': 3},
+        'ADM 305': {'class_name': 'ADM 305', 'column': 7, 'rows': 3},
+        'ADM 306': {'class_name': 'ADM 306', 'column': 7, 'rows': 3},
+        'ADM 307': {'class_name': 'ADM 307', 'column': 7, 'rows': 3},
+        'ADM 308': {'class_name': 'ADM 308', 'column': 7, 'rows': 3},
+        'ADM 309': {'class_name': 'ADM 309', 'column': 7, 'rows': 3},
+        'ADM 310': {'class_name': 'ADM 310', 'column': 7, 'rows': 3},
+        'ADM 311': {'class_name': 'ADM 311', 'column': 7, 'rows': 3},
+        'EAB 206': {'class_name': 'EAB 206', 'column': 7, 'rows': 3},
+        'EAB 306': {'class_name': 'EAB 306', 'column': 7, 'rows': 3},
+        'EAB 401': {'class_name': 'EAB 401', 'column': 8, 'rows': 3},
+        'EAB 304': {'class_name': 'EAB 304', 'column': 7, 'rows': 3},
+        'EAB 303': {'class_name': 'EAB 303', 'column': 7, 'rows': 3},
+        'EAB 104': {'class_name': 'EAB 104', 'column': 7, 'rows': 3},
+        'EAB 103': {'class_name': 'EAB 103', 'column': 7, 'rows': 3},
+        'EAB 203': {'class_name': 'EAB 203', 'column': 7, 'rows': 3},
+        'EAB 204': {'class_name': 'EAB 204', 'column': 7, 'rows': 3},
+        'WAB 206': {'class_name': 'WAB 206', 'column': 7, 'rows': 3},
+        'WAB 105': {'class_name': 'WAB 105', 'column': 7, 'rows': 3},
+        'WAB 107': {'class_name': 'WAB 107', 'column': 7, 'rows': 3},
+        'WAB 207': {'class_name': 'WAB 207', 'column': 8, 'rows': 3},
+        'WAB 212': {'class_name': 'WAB 212', 'column': 7, 'rows': 3},
+        'WAB 210': {'class_name': 'WAB 210', 'column': 7, 'rows': 3},
+        'WAB 211': {'class_name': 'WAB 211', 'column': 7, 'rows': 3},
+        'WAB 205': {'class_name': 'WAB 205', 'column': 7, 'rows': 3},
+        'WAB 305': {'class_name': 'WAB 305', 'column': 7, 'rows': 3},
+        'WAB 303': {'class_name': 'WAB 303', 'column': 7, 'rows': 3},
+        'WAB 403': {'class_name': 'WAB 403', 'column': 7, 'rows': 3},
+        'WAB 405': {'class_name': 'WAB 405', 'column': 7, 'rows': 3},
+        'EAB 415': {'class_name': 'EAB 415', 'column': 7, 'rows': 3},
+        'EAB 416': {'class_name': 'EAB 416', 'column': 8, 'rows': 3},
+        'WAB 412': {'class_name': 'WAB 412', 'column': 7, 'rows': 3},
+        'EAB 310': {'class_name': 'EAB 310', 'column': 7, 'rows': 3},
     }
 
     for item in items:
@@ -446,7 +561,7 @@ def seating():
     if filled:
         with open('static/stuarrange.txt', 'r') as stufiles:
             stulist = json.load(stufiles)
-        return render_template('seating.html', newlist=stulist)
+        return redirect(url_for('admin'))
     else:
         stucollections.update_many({}, {"$unset": {"seatnum": ""}})
         for date in dates:
@@ -486,7 +601,7 @@ def seating():
                         listy.pop(0)
                     i["a"].append(firstitem["ro"][0])
                     seatinfo = [
-                        {"date": date, "seatnum": "a" + str(len(i["a"])), "classroom": class_name}]
+                        {"date": date, "seatnum": "a" + str(len(i["a"])), "classroom": class_name, "subject": firstitem["_id"]["subject"]}]
                     stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                         "$addToSet": {"seatnum": seatinfo}})
                     firstitem["ro"].pop(0)
@@ -506,7 +621,7 @@ def seating():
                         break
                     i["b"].append(firstitem["ro"][0])
                     seatinfo = [
-                        {"date": date, "seatnum": "b" + str(len(i["b"])), "classroom": class_name}]
+                        {"date": date, "seatnum": "b" + str(len(i["b"])), "classroom": class_name, "subject": firstitem["_id"]["subject"]}]
                     stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                         "$addToSet": {"seatnum": seatinfo}})
                     firstitem["ro"].pop(0)
@@ -517,7 +632,8 @@ def seating():
                 json.dump(newlist, f, indent=4)
             filled = True
 
-    return render_template('seating.html', message="done")
+    flash('Generated', 'success')
+    return render_template("adminhome.html")
 
 # Resetting everything out
 
@@ -531,11 +647,16 @@ def reset():
 def reset_collections():
     global filled
     filled = False
-    usercollections.drop()  # Drop the 'users' collection
     stucollections.drop()  # Drop the 'student' collection
     message = "Student data has been deleted."
     return render_template('reset.html', message=message)
 
+
+@app.route('/reset/users', methods=['GET'])
+def reset_users():
+    usercollections.drop()  # Drop the 'users' collection
+    message = "Users has been deleted."
+    return render_template('reset.html', message=message)
 
 @app.route('/reset/static', methods=['GET'])
 def reset_static():
@@ -562,12 +683,6 @@ def reset_uploads():
     return render_template('reset.html', message=message)
 
 
-@app.route('/test', methods=['GET'])
-def test():
-    stucollections.update_many({}, {"$unset": {"seatnum": ""}})
-    return ("done")
-
-
 # main function
 if __name__ == '__main__':
     app.run()
@@ -579,6 +694,3 @@ if __name__ == '__main__':
     # ex: 25-12-2025
     # 12012001 - 12012035  : EAB 103
     # 12012036 - 12012063  : EAB 104
-# -issue-:Since iam using admission number (120120__) instead of University Number(JEC____)
-    # this might cause an issue for LET students
-    # they get the admission num (121120__) of juniors while the university number is continous (LJEC____)
