@@ -317,9 +317,9 @@ def timetable():
                 {"$set": {"subject": timetable2["mr"]}}
             )
             stucollections.update_many(
-                {"sheet_name": "ra", "Year": "SecondYear",
+                {"sheet_name": "rb", "Year": "SecondYear",
                     "_id": {"$in": second_year_student_ids}},
-                {"$set": {"subject": timetable2["ra"]}}
+                {"$set": {"subject": timetable2["rb"]}}
             )
 
         if timetable3 is not None:
@@ -351,6 +351,11 @@ def timetable():
                 {"$set": {"subject": timetable3["ec"]}}
             )
             stucollections.update_many(
+                {"sheet_name": "ce", "Year": "ThirdYear",
+                    "_id": {"$in": third_year_student_ids}},
+                {"$set": {"subject": timetable3["ce"]}}
+            )
+            stucollections.update_many(
                 {"sheet_name": "mea", "Year": "ThirdYear",
                     "_id": {"$in": third_year_student_ids}},
                 {"$set": {"subject": timetable3["me"]}}
@@ -364,11 +369,6 @@ def timetable():
                 {"sheet_name": "me", "Year": "ThirdYear",
                     "_id": {"$in": third_year_student_ids}},
                 {"$set": {"subject": timetable3["me"]}}
-            )
-            stucollections.update_many(
-                {"sheet_name": "ce", "Year": "ThirdYear",
-                    "_id": {"$in": third_year_student_ids}},
-                {"$set": {"subject": timetable3["ce"]}}
             )
             stucollections.update_many(
                 {"sheet_name": "mr", "Year": "ThirdYear",
@@ -405,34 +405,34 @@ def timetable():
                 {"$set": {"subject": timetable4["cs"]}}
             )
             stucollections.update_many(
+                {"sheet_name": "ec", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["ec"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "ce", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["ce"]}}
+            )
+            stucollections.update_many(
                 {"sheet_name": "ee", "Year": "FourthYear",
                     "_id": {"$in": fourth_year_student_ids}},
                 {"$set": {"subject": timetable4["ee"]}}
-            )
-            stucollections.update_many(
-                {"sheet_name": "ece", "Year": "FourthYear",
-                    "_id": {"$in": fourth_year_student_ids}},
-                {"$set": {"subject": timetable4["ece"]}}
             )
             stucollections.update_many(
                 {"sheet_name": "me", "Year": "FourthYear",
                     "_id": {"$in": fourth_year_student_ids}},
                 {"$set": {"subject": timetable4["me"]}}
             )
-            # stucollections.update_many(
-            #     {"sheet_name": "mea", "Year": "FourthYear",
-            #         "_id": {"$in": fourth_year_student_ids}},
-            #     {"$set": {"subject": timetable4["me"]}}
-            # )
-            # stucollections.update_many(
-            #     {"sheet_name": "meb", "Year": "FourthYear",
-            #         "_id": {"$in": fourth_year_student_ids}},
-            #     {"$set": {"subject": timetable4["me"]}}
-            # )
             stucollections.update_many(
-                {"sheet_name": "ce", "Year": "FourthYear",
+                {"sheet_name": "mea", "Year": "FourthYear",
                     "_id": {"$in": fourth_year_student_ids}},
-                {"$set": {"subject": timetable4["ce"]}}
+                {"$set": {"subject": timetable4["me"]}}
+            )
+            stucollections.update_many(
+                {"sheet_name": "meb", "Year": "FourthYear",
+                    "_id": {"$in": fourth_year_student_ids}},
+                {"$set": {"subject": timetable4["me"]}}
             )
             stucollections.update_many(
                 {"sheet_name": "mr", "Year": "FourthYear",
@@ -555,6 +555,7 @@ def seating():
     if filled:
         with open('static/stuarrange.txt', 'r') as stufiles:
             stulist = json.load(stufiles)
+        flash('Already generated', 'error')
         return redirect(url_for('admin'))
     else:
         stucollections.update_many({}, {"$unset": {"seatnum": ""}})
@@ -645,7 +646,7 @@ def viewseating():
                     content = file.read()
                     file_list.append(content)
     else:
-        flash('Generate seating', 'error')
+        flash('Firstly generate seating', 'error')
         return render_template("adminhome.html")
 
     return render_template('seating.html', file_list=file_list)
