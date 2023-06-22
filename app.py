@@ -552,12 +552,16 @@ def details():
 @app.route('/seating', methods=['GET'])
 def seating():
     global filled
+    if not os.path.exists('static/stuarrange.txt'):
+        flash('Choose Class', 'error')
+        return redirect(url_for('admin'))
     if filled:
         with open('static/stuarrange.txt', 'r') as stufiles:
             stulist = json.load(stufiles)
         flash('Already generated', 'error')
         return redirect(url_for('admin'))
     else:
+        print(dates)
         stucollections.update_many({}, {"$unset": {"seatnum": ""}})
         for date in dates:
             global listyy
@@ -627,8 +631,8 @@ def seating():
                 json.dump(newlist, f, indent=4)
             filled = True
 
-    flash('Generated', 'success')
-    return render_template("adminhome.html")
+        flash('Generated', 'success')
+        return render_template("adminhome.html")
 
 
 @app.route('/viewseating', methods=['GET'])
@@ -648,8 +652,8 @@ def viewseating():
     else:
         flash('Firstly generate seating', 'error')
         return render_template("adminhome.html")
-
-    return render_template('seating.html', file_list=file_list)
+    
+    return render_template('viewseating.html', file_list=file_list)
 
 
 # Resetting everything out
@@ -676,8 +680,6 @@ def reset_users():
 
 @app.route('/reset/static', methods=['GET'])
 def reset_static():
-    with open('static/dates.txt', 'w') as f:
-        json.dump([], f, indent=4)
     folder_path = 'static'
     files = os.listdir(folder_path)
     for file in files:
@@ -685,6 +687,8 @@ def reset_static():
             file_path = os.path.join(folder_path, file)
             os.remove(file_path)
     message = "Static files have been reset."
+    global filled
+    filled=False
     return render_template('reset.html', message=message)
 
 

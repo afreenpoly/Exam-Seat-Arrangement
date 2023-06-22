@@ -15,10 +15,14 @@
       .custom-list {
         margin-left: 20px;
       }
+
+      .row {
+        justify-content: center;
+      }
     </style>
   </head>
   <body>
-    <div class="container py-3">
+    <div class="container py-2">
       <header>
         <div
           class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom"
@@ -40,16 +44,15 @@
       </header>
     </div>
 
-
     <form action="/details" method="POST">
-      <div class="row row-cols-1 row-cols-md-4 mb-3">
-        <div class="col-md">
+      <div class="row row-cols-1 row-cols-md-4">
+        <div class="col-md-auto">
           <div class="card mb-4 rounded-3 shadow-sm custom-card">
             <div class="card-header py-3">
               <h4 class="my-0 fw-normal text-center">ADM Class</h4>
             </div>
             <div class="card-body">
-              <ul class="list-unstyled mt-3 mb-4 custom-list">
+              <ul class="list-unstyled mt-1 mb-1 custom-list">
                 <input
                   type="checkbox"
                   name="item[]"
@@ -127,83 +130,38 @@
           </div>
         </div>
 
-        <div class="col-md">
+        <div class="col-md-auto">
           <div class="card mb-4 rounded-3 shadow-sm custom-card">
             <div class="card-header py-3">
               <h4 class="my-0 fw-normal text-center">East Classrooms</h4>
             </div>
             <div class="card-body">
-              <ul class="list-unstyled mt-3 mb-4 custom-list">
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC1"
-                  value="EAB 206"
-                />
+              <ul class="list-unstyled mt-1 mb-1 custom-list">
+                <input type="checkbox" name="item[]" id="EC1" value="EAB 206" />
                 <label for="EC1">EAB 206</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC2"
-                  value="EAB 306"
-                />
+                <input type="checkbox" name="item[]" id="EC2" value="EAB 306" />
                 <label for="EC2">EAB 306</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC3"
-                  value="EAB 401"
-                />
+                <input type="checkbox" name="item[]" id="EC3" value="EAB 401" />
                 <label for="EC3">EAB 401</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC4"
-                  value="EAB 304"
-                />
+                <input type="checkbox" name="item[]" id="EC4" value="EAB 304" />
                 <label for="EC4">EAB 304</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC5"
-                  value="EAB 303"
-                />
+                <input type="checkbox" name="item[]" id="EC5" value="EAB 303" />
                 <label for="EC5">EAB 303</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC6"
-                  value="EAB 104"
-                />
+                <input type="checkbox" name="item[]" id="EC6" value="EAB 104" />
                 <label for="EC6">EAB 104</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC7"
-                  value="EAB 103"
-                />
+                <input type="checkbox" name="item[]" id="EC7" value="EAB 103" />
                 <label for="EC7">EAB 103</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC8"
-                  value="EAB 203"
-                />
+                <input type="checkbox" name="item[]" id="EC8" value="EAB 203" />
                 <label for="EC8">EAB 203</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="EC9"
-                  value="EAB 204"
-                />
+                <input type="checkbox" name="item[]" id="EC9" value="EAB 204" />
                 <label for="EC9">EAB 204</label>
                 <br />
                 <input
@@ -241,77 +199,32 @@
               <h4 class="my-0 fw-normal text-center">West Classrooms</h4>
             </div>
             <div class="card-body">
-              <ul class="list-unstyled mt-3 mb-4 custom-list">
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC1"
-                  value="WAB 206"
-                />
+              <ul class="list-unstyled mt-1 mb-1 custom-list">
+                <input type="checkbox" name="item[]" id="WC1" value="WAB 206" />
                 <label for="WC1">WAB 206</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC2"
-                  value="WAB 105"
-                />
+                <input type="checkbox" name="item[]" id="WC2" value="WAB 105" />
                 <label for="WC2">WAB 105</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC3"
-                  value="WAB 107"
-                />
+                <input type="checkbox" name="item[]" id="WC3" value="WAB 107" />
                 <label for="WC3">WAB 107</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC4"
-                  value="WAB 207"
-                />
+                <input type="checkbox" name="item[]" id="WC4" value="WAB 207" />
                 <label for="WC4">WAB 207</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC5"
-                  value="WAB 212"
-                />
+                <input type="checkbox" name="item[]" id="WC5" value="WAB 212" />
                 <label for="WC5">WAB 212</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC6"
-                  value="WAB 210"
-                />
+                <input type="checkbox" name="item[]" id="WC6" value="WAB 210" />
                 <label for="WC6">WAB 210</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC7"
-                  value="WAB 211"
-                />
+                <input type="checkbox" name="item[]" id="WC7" value="WAB 211" />
                 <label for="WC7">WAB 211</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC8"
-                  value="WAB 205"
-                />
+                <input type="checkbox" name="item[]" id="WC8" value="WAB 205" />
                 <label for="WC8">WAB 205</label>
                 <br />
-                <input
-                  type="checkbox"
-                  name="item[]"
-                  id="WC9"
-                  value="WAB 305"
-                />
+                <input type="checkbox" name="item[]" id="WC9" value="WAB 305" />
                 <label for="WC9">WAB 305</label>
                 <br />
                 <input
@@ -354,7 +267,10 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-md-12 d-flex justify-content-center" style="margin-top: 20px">
+          <div
+            class="col-md-12 d-flex justify-content-center"
+            style="margin-top: 20px"
+          >
             <input type="submit" class="btn btn-primary" value="Submit" />
           </div>
         </div>

@@ -1,21 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Class Details</title>
+    <title>Seating</title>
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
-    />   
-    <style>
-      .custom{
-        width: 130px;
-      }
-    </style>
+    />
   </head>
   <body>
     <div class="container py-3">
@@ -27,7 +20,7 @@
             href="/admin"
             class="d-flex align-items-center link-body-emphasis text-decoration-none"
           >
-            <span class="fs-4">Class Details</span>
+            <span class="fs-4">Seating Files</span>
           </a>
 
           <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
@@ -40,19 +33,17 @@
         </div>
       </header>
     </div>
-
-    <div class="container">
-      <div class="row">
-        {% for classroom in class_data %}
-        <div class="custom col-md-4">
-          <div class="card mb-3">
-            <div class="card-body">
-              <h6 class="card-title">{{ classroom['class_name'] }}</h6>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
+    
+    <script>
+      var day = [];
+      {% for file_content in file_list %}
+          day.push(`{{file_content }}`);
+      {% endfor %}
+      function tablegeneration(i){
+        var dayjson=JSON.parse(day[i])
+        
+      }
+      tablegeneration(0);
+    </script>
   </body>
 </html>
