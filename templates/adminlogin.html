@@ -101,6 +101,16 @@
             Sign in
           </button>
         </form>
+        {% with messages = get_flashed_messages(category_filter=['login-error'])
+        %} {% if messages %}
+        <div class="alert alert-danger mt-3">
+          <ul class="list-unstyled mb-0">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %} {% endwith %}
       </div>
 
       <div class="form-signin border border-2 border-grey">
@@ -138,10 +148,26 @@
               Remember me
             </label>
           </div>
-          <button class="btn btn-primary w-100 py-2" type="submit">
+          <button class="btn btn-primary w-100 py-2 mb-2" type="submit">
             Sign Up
           </button>
         </form>
+        {% with messages =
+        get_flashed_messages(category_filter=['registration-error',
+        'registration-success']) %} {% if messages %} {% for message in messages
+        %} {% if 'registration-success' in message %}
+        <div class="alert alert-danger">
+          <ul class="list-unstyled mb-0">
+            <li>{{ message }}</li>
+          </ul>
+        </div>
+        {% else %}
+        <div class="alert alert-success mt-3">
+          <ul class="list-unstyled mb-0">
+            <li>{{ message }}</li>
+          </ul>
+        </div>
+        {% endif %} {% endfor %} {% endif %} {% endwith %}
       </div>
     </div>
 

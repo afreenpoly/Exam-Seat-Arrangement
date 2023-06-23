@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session,Markup
+from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session, Markup
 from datetime import datetime
 from static.converter import excel_to_json
 import os
@@ -17,7 +17,7 @@ app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\upload
 
 # configuring mongodb
 client = pymongo.MongoClient(
-    "mongodb+srv://afreenpoly:afreenpolymongodb@studetails.ebwix9o.mongodb.net/")
+    "mongodb://localhost:27017")
 db = client.Studetails
 usercollections = db.users
 stucollections = db.student
@@ -37,8 +37,6 @@ def index():
     return render_template('home.html')
 
 # signup page for admin
-
-
 @app.route('/admin/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -693,7 +691,7 @@ def reset_static():
             os.remove(file_path)
     message = "Static files have been reset."
     global filled
-    filled=False
+    filled = False
     return render_template('reset.html', message=message)
 
 
