@@ -493,7 +493,7 @@ def details():
     items = request.form.getlist('item[]')
     class_data = []
     class_details = {
-        'ADM 303': {'class_name': 'ADM 303', 'column': 7, 'rows': 3},
+        'ADM 303': {'class_name': 'ADM 303', 'column': 6, 'rows': 7},
         'ADM 304': {'class_name': 'ADM 304', 'column': 8, 'rows': 3},
         'ADM 305': {'class_name': 'ADM 305', 'column': 7, 'rows': 3},
         'ADM 306': {'class_name': 'ADM 306', 'column': 7, 'rows': 3},

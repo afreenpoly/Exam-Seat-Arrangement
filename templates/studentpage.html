@@ -9,6 +9,11 @@
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
+    <style>
+      .my-form {
+        margin: auto 100px;
+      }
+    </style>
   </head>
   <body>
     <div class="container py-3">
@@ -34,33 +39,44 @@
       </header>
     </div>
 
-    <form action="/student" method="POST">
-      <div class="d-flex justify-content-between">
-        <label for="roll_num">Roll Number:</label>
-        <input
-          type="text"
-          class="form-control"
-          name="roll_num"
-          id="roll_num"
-          placeholder="Enter roll number"
-          size="4"
-        />
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <form action="/student" method="POST" class="my-form">
+      <div class="custom-div">
+        <div class="d-flex justify-content-between">
+          <label for="roll_num">Roll Number:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="roll_num"
+            id="roll_num"
+            placeholder="Enter roll number"
+            size="4"
+          />
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
       </div>
-
       {% if roll_num %}
       <div class="mt-4">
         <h5>Exam Hall Details:</h5>
-        <ul class="list-group">
-          {% for seat in seat_num %}
-          <li class="list-group-item">
-            <strong>Date:</strong> {{ seat[0]['date'] }} <br />
-            <strong>Subject:</strong> {{ seat[0]['subject'] }} <br />
-            <strong>Seat Number:</strong> {{ seat[0]['seatnum'] }} <br />
-            <strong>Classroom:</strong> {{ seat[0]['classroom'] }} <br />
-          </li>
-          {% endfor %}
-        </ul>
+        <table class="table my-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Subject</th>
+              <th>Seat Number</th>
+              <th>Classroom</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for seat in seat_num %}
+            <tr>
+              <td>{{ seat[0]['date'] }}</td>
+              <td>{{ seat[0]['subject'] }}</td>
+              <td>{{ seat[0]['seatnum'] }}</td>
+              <td>{{ seat[0]['classroom'] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       {% endif %}
     </form>
