@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session
+from flask import Flask, flash, render_template, request, redirect, url_for, jsonify, session,Markup
 from datetime import datetime
 from static.converter import excel_to_json
 import os
@@ -16,8 +16,8 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\uploads'
 
 # configuring mongodb
-
-client = pymongo.MongoClient("mongodb://localhost:27017")
+client = pymongo.MongoClient(
+    "mongodb+srv://afreenpoly:afreenpolymongodb@studetails.ebwix9o.mongodb.net/")
 db = client.Studetails
 usercollections = db.users
 stucollections = db.student
@@ -638,22 +638,27 @@ def seating():
 @app.route('/viewseating', methods=['GET'])
 def viewseating():
     global filled
+    if not filled:
+        flash('Firstly generate seating', 'error')
+        return render_template("adminhome.html")
+    with open('static/dates.txt', 'r') as file:
+        content = file.read()
+    return render_template('viewseating.html', dates=Markup(content))
+
+
+@app.route('/viewseating/<path:name>', methods=['GET'])
+def viewseating1(name):
+    global filled
     if filled:
-        file_list = []
+        file_loc = 'static/stuarrange'+name+'.txt'
         # Assumes static folder is defined in your Flask app
-        static_folder = app.static_folder
-        pattern = 'stuarrange?*.txt'
-        for file_name in os.listdir(static_folder):
-            if fnmatch.fnmatch(file_name, pattern):
-                file_path = os.path.join(static_folder, file_name)
-                with open(file_path, 'r') as file:
-                    content = file.read()
-                    file_list.append(content)
+        with open(file_loc, 'r') as file:
+            content = file.read()
+
     else:
         flash('Firstly generate seating', 'error')
         return render_template("adminhome.html")
-    
-    return render_template('viewseating.html', file_list=file_list)
+    return content
 
 
 # Resetting everything out
