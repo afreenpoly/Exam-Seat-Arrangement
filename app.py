@@ -21,6 +21,7 @@ client = pymongo.MongoClient(
 db = client.Studetails
 usercollections = db.users
 stucollections = db.student
+
 # global variables
 listy = []
 filled = False
@@ -28,10 +29,7 @@ with open('static/dates.txt', 'r') as datefiles:
     dates = json.load(datefiles)
 
 # routes
-
 # homepage
-
-
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -42,10 +40,14 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        
+        # Check if the username already exists in the database
         if usercollections.find_one({'username': username}):
             flash('Username already exists', 'registration-error')
             return redirect(url_for('register'))
+        
         else:
+            # If the username is unique, insert the new user into the database
             usercollections.insert_one(
                 {'username': username, 'password': password})
             flash('Registration successful!', 'registration-success')
@@ -58,11 +60,16 @@ def register():
 @app.route('/admin/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        # Retrieve the username and password from the form
         username = request.form['username']
         password = request.form['password']
+        
+        # Check if the username and password match a user in the database
         user = usercollections.find_one(
             {'username': username, 'password': password})
+        
         if user:
+            # If the user exists, store the username in the session
             session['username'] = username
             return redirect(url_for('admin'))
         else:
@@ -79,12 +86,14 @@ def admin():
 
 
 # When student enters their rollnumber
-    # their corresponding seating should be displayed
+    # their corresponding seating is displayed
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     if request.method == 'POST':
         roll = request.form['roll_num']
         student_data = stucollections.find_one({'rollnum': int(roll)})
+        
+        # Retrieve the seat number for the student
         seatnum = None
         if student_data is not None:
             seatnum = student_data['seatnum']
@@ -176,19 +185,16 @@ def upload_file():
     return render_template('uploadeddata.html', data2=data2, data3=data3, data4=data4)
 
 # page for displaying the data via "GET" method
-
-
 @app.route('/displaydata', methods=['GET'])
 def display_data():
     return render_template('displaydata.html', data2=data2, data3=data3, data4=data4)
 
 # here the timetable is uploaded via timetableupload.html
 # the filename is checked
-
-
 @app.route('/timetable', methods=['GET', 'POST'])
 def timetable():
     if request.method == 'POST':
+        # Retrieve uploaded files
         file2 = request.files['file2']
         file3 = request.files['file3']
         file4 = request.files['file4']
@@ -230,7 +236,7 @@ def timetable():
         # "Year" field is set to "SecondYear"
         # creates a list of the "_id" field values for those documents.
         # It then repeats this process for students in their third and fourth year of study,
-        # creating separate lists of IDs for each year level.
+        # Fetch student IDs for each year level
 
         second_year_students = stucollections.find({"Year": "SecondYear"})
         second_year_student_ids = [student["_id"]
@@ -255,6 +261,7 @@ def timetable():
 
         # The updated "subject" field is set to the contents of the corresponding sheet in the "timetable2" dictionary,
         # which is accessed using the sheet name as the key(e.g., "timetable2["csa"]").
+        # Update subjects in the "stucollections" collection based on the uploaded timetables
 
         if timetable2 is not None:
             for sheet_name, subjects in timetable2.items():
@@ -447,12 +454,13 @@ def timetable():
     return render_template('timetableupload.html')
 
 # the timetable is fetched and displayed here
-
-
 @app.route('/viewtimetable', methods=['GET'])
 def view_timetable():
+    # Fetch the documents from the MongoDB collection
     documents = stucollections.find(
         {}, {'sheet_name': 1, 'subject': 1, 'Year': 1})
+    
+    # Dictionary to store the timetable data
     timetables = {}
     for doc in documents:
         year = doc['Year']
@@ -464,7 +472,10 @@ def view_timetable():
 
         if sheet_name not in timetables[year]:
             timetables[year][sheet_name] = []
+        # Append the subject to the corresponding year and sheet_name in the timetable dictionary
         timetables[year][sheet_name].append(subject)
+        
+    # Convert the timetable dictionary to JSON format
     timetables = jsonify(timetables)
     return timetables
 
@@ -473,16 +484,23 @@ def view_timetable():
 # this route fetches the uploaded data from the mongodb
 @app.route('/viewdata', methods=['GET'])
 def view_data():
+    # Fetch the documents from the MongoDB collection
     documents = stucollections.find(
         {}, {'name': 1, 'rollnum': 1, 'sheet_name': 1, 'Year': 1})
+    
+    # List to store the retrieved data
     data = []
+    
     for doc in documents:
+        # Extract the relevant fields from each document and append them to the data list
         data.append({
             'name': doc['name'],
             'rollnum': doc['rollnum'],
             'sheet_name': doc['sheet_name'],
             'Year': doc['Year']
         })
+        
+    # Convert the data list to JSON format
     data = jsonify(data)
     return data
 
@@ -490,8 +508,13 @@ def view_data():
 # here we are assigning the classname and seat num for each class
 @app.route('/details', methods=['POST'])
 def details():
+    # Get the list of selected items from the form
     items = request.form.getlist('item[]')
+    
+    # List to store the details of selected classes
     class_data = []
+    
+    # Dictionary mapping class items to their details
     class_details = {
         'ADM 303': {'class_name': 'ADM 303', 'column': 6, 'rows': 7},
         'ADM 304': {'class_name': 'ADM 304', 'column': 8, 'rows': 3},
@@ -533,6 +556,7 @@ def details():
         if item in class_details:
             class_data.append(class_details[item])
 
+    # Write the class_data list to 'static/stuarrange.txt' file as JSON
     with open('static/stuarrange.txt', 'w') as f:
         json.dump(class_data, f, indent=4)
 
@@ -550,24 +574,36 @@ def details():
 @app.route('/seating', methods=['GET'])
 def seating():
     global filled
+    
+    # Check if 'stuarrange.txt' file doesn't exist, flash an error message and redirect to 'admin' route
     if not os.path.exists('static/stuarrange.txt'):
         flash('Choose Class', 'error')
         return redirect(url_for('admin'))
+    
     if filled:
         with open('static/stuarrange.txt', 'r') as stufiles:
-            stulist = json.load(stufiles)
+            stulist = json.load(stufiles)  # Load the JSON data from the file
         flash('Already generated', 'error')
         return redirect(url_for('admin'))
+    
     else:
-        print(dates)
+        #reset data to avoid redundancy
         stucollections.update_many({}, {"$unset": {"seatnum": ""}})
+        
         for date in dates:
             global listyy
+            
+            #all date , subjects and students
             listyy = []
+            
+            #rollnumbers of each subject
             details = stucollections.aggregate(
                 [{"$group": {"_id": "$subject", "ro": {"$push": "$rollnum"}}}])
             for i in details:
                 listyy.append(i)
+            
+            #sorting rollnumber by date of exam.
+            #current date subjects and students
             listy = []
             for item in listyy:
                 for item1 in item["_id"]:
@@ -575,59 +611,108 @@ def seating():
                         tempdict = dict(item)
                         tempdict["_id"] = item1
                         listy.append(tempdict)
+                        
             with open('static/stuarrange.txt', 'r') as stufiles:
                 stulist = json.load(stufiles)
+             
+                
             for i in stulist:
                 i["a"] = []
                 i["b"] = []
                 class_name = i.get("class_name")
                 if len(listy) == 0:
                     break
+                
+                # Calculate the number of seats in 'a' ,'b'
                 a = math.ceil(int(i["column"])/2)*int(i["rows"])
                 b = (int(i["column"])*int(i["rows"]))-a
+                
+                #selecting the subject into firstitem
                 firstitem = listy[0]
+                
+                #inserts current date subject
                 idlist = []
                 idlist.append(firstitem["_id"])
+                
                 listy.pop(0)
+                
+                # Assign students to seats in category 'a'
                 for j in range(0, a):
+                    #checking if currentsubject students is over and seats and students of other subject exist
                     if len(firstitem["ro"]) == 0:
+                        
+                        #check if students list is empty
                         if len(listy) == 0:
                             break
+                        
+                        #takes next subject into firstitem
                         firstitem = listy[0]
+                        
+                        #contains currents date's(firstitem selected) subject
                         idlist.append(firstitem["_id"])
                         listy.pop(0)
+                        
                     i["a"].append(firstitem["ro"][0])
+                    #assigning seat
+                    
                     seatinfo = [
                         {"date": date, "seatnum": "a" + str(len(i["a"])), "classroom": class_name, "subject": firstitem["_id"]["subject"]}]
                     stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                         "$addToSet": {"seatnum": seatinfo}})
+                    
+                    #remove student after seating from the current subject
                     firstitem["ro"].pop(0)
+                    
+                #a section is over while students are remaining
+                #then remaining students is appended back to the listy
                 if len(firstitem["ro"]) != 0:
                     listy.append(firstitem)
+                
+                # check if students list is empty
                 if len(listy) == 0:
                     break
+                
+                
+                # takes next subject into firstitem since a has been filled. And different subject should be taken
                 firstitem = listy[0]
                 listy.pop(0)
+                
+                # Assign students to seats in category 'b'
                 for k in range(0, b):
                     if len(firstitem["ro"]) == 0:
+                        
+                        # check if students list is empty
                         if len(listy) == 0:
                             break
+                        
+                        # takes next subject into firstitem since there are no students left for that subject(firstitem)
                         firstitem = listy[0]
                         listy.pop(0)
+                    
+                    
+                    #check if a has the same subject as b
                     if firstitem["_id"] in idlist:
                         break
+                    #this is why some rows are left in b column
+                    
                     i["b"].append(firstitem["ro"][0])
                     seatinfo = [
                         {"date": date, "seatnum": "b" + str(len(i["b"])), "classroom": class_name, "subject": firstitem["_id"]["subject"]}]
                     stucollections.update_one({"rollnum": firstitem["ro"][0]}, {
                         "$addToSet": {"seatnum": seatinfo}})
                     firstitem["ro"].pop(0)
+                    
+                # b section is over while students are remaining
+                # then remaining students is appended back to the listy
                 if len(firstitem["ro"]) != 0:
                     listy.append(firstitem)
+                    
             newlist = list(stulist)
+            # Open 'stuarrange<date>.txt' file in write mode
             with open('static/stuarrange'+date+'.txt', 'w') as f:
                 json.dump(newlist, f, indent=4)
-            filled = True
+            filled = True  # Set 'filled' to True to indicate that seating is generated
+
 
         flash('Generated', 'success')
         return render_template("adminhome.html")
@@ -642,6 +727,8 @@ def viewseating():
     with open('static/dates.txt', 'r') as file:
         content = file.read()
     return render_template('viewseating.html', dates=Markup(content))
+# Render the 'viewseating.html' template, passing the content of 'dates.txt' as the 'dates' variable
+# Markup is used to mark the content as safe to render HTML tags, assuming the content contains HTML
 
 
 @app.route('/viewseating/<path:name>', methods=['GET'])
@@ -650,8 +737,8 @@ def viewseating1(name):
     if filled:
         file_loc = 'static/stuarrange'+name+'.txt'
         # Assumes static folder is defined in your Flask app
-        with open(file_loc, 'r') as file:
-            content = file.read()
+        with open(file_loc, 'r') as file:  # Open the file in read mode
+            content = file.read()  # Read the content of the file
 
     else:
         flash('Firstly generate seating', 'error')
@@ -684,11 +771,12 @@ def reset_users():
 @app.route('/reset/static', methods=['GET'])
 def reset_static():
     folder_path = 'static'
-    files = os.listdir(folder_path)
+    files = os.listdir(folder_path)  # Get a list of all files in the folder
     for file in files:
         if file.startswith("stuarrange"):
+            # Get the full path of the file
             file_path = os.path.join(folder_path, file)
-            os.remove(file_path)
+            os.remove(file_path)  # Remove the file from the folder
     message = "Static files have been reset."
     global filled
     filled = False

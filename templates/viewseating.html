@@ -22,7 +22,6 @@
           >
             <span class="fs-4">Seat Arrangement</span>
           </a>
-
           <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
             <a
               class="me-3 py-2 link-body-emphasis text-decoration-none"
@@ -32,7 +31,6 @@
           </nav>
         </div>
       </header>
-
       <div>
         <h5>Choose the Date:</h5>
         <div id="buttons" class="container py-3"></div>
@@ -43,7 +41,6 @@
       var dates = {{dates}};
       var buttonsContainer = document.getElementById('buttons');
       var tablesContainer = document.getElementById('tables');
-
       // Create buttons for each date
       for (var i = 0; i < dates.length; i++) {
         var button = document.createElement('button');
@@ -54,7 +51,6 @@
         });
         buttonsContainer.appendChild(button);
       }
-
       function table(name) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'viewseating/' + name, true);
@@ -62,29 +58,22 @@
           if (xhr.status == 200) {
             var out = '';
             var json = JSON.parse(xhr.responseText);
-
             for (var i = 0; i < json.length; i++) {
               var classData = json[i];
-
               if (classData.a || classData.b) {
                 var maxRows = Math.max(classData.a ? classData.a.length : 0, classData.b ? classData.b.length : 0);
-
                 out += '<table class="table table-bordered">';
                 out += '<tr><th colspan="4">' + classData.class_name + '</th></tr>';
                 out += '<tr><th>SeatNo</th><th>RollNo</th><th>SeatNo</th><th>RollNo</th></tr>';
-
                 for (var z = 0; z < maxRows; z++) {
                   var aData = classData.a && z < classData.a.length ? classData.a[z] : '-';
                   var bData = classData.b && z < classData.b.length ? classData.b[z] : '-';
-
                   out += '<tr><td>A' + (z + 1) + '</td><td>' + aData + '</td>';
                   out += '<td>B' + (z + 1) + '</td><td>' + bData + '</td></tr>';
                 }
-
                 out += '</table>';
               }
             }
-
             tablesContainer.innerHTML = out;
           }
         };
