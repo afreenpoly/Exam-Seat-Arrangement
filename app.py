@@ -794,6 +794,15 @@ def reset_uploads():
     return render_template('reset.html', message=message)
 
 
+@app.route('/reset/dates', methods=['GET'])
+def reset_dates():
+    folder_path = 'static'
+    file_path = os.path.join(folder_path, 'dates.txt')
+    with open(file_path, 'w') as file:
+        file.write('[]')
+    message = "Dates have been reset."
+    return render_template('reset.html', message=message)
+
 # main function
 if __name__ == '__main__':
     app.run()
