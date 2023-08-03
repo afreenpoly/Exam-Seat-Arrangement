@@ -16,9 +16,11 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\uploads'
 
 # configuring mongodb
-password = os.environ.get('MONGO_PASSWORD')
-connection_string = f"mongodb+srv://afreenpoly:{password}@studetails.ebwix9o.mongodb.net/"
-client = pymongo.MongoClient(connection_string)
+#password = os.environ.get('MONGO_PASSWORD')
+#connection_string = f"mongodb+srv://afreenpoly:{password}@studetails.ebwix9o.mongodb.net/"
+#client = pymongo.MongoClient(connection_string)
+client = pymongo.MongoClient(
+    "mongodb://localhost:27017")
 
 db = client.Studetails
 usercollections = db.users
