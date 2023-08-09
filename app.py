@@ -16,12 +16,8 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\uploads'
 
 # configuring mongodb
-#password = os.environ.get('MONGO_PASSWORD')
-#connection_string = f"mongodb+srv://afreenpoly:{password}@studetails.ebwix9o.mongodb.net/"
-#client = pymongo.MongoClient(connection_string)
 client = pymongo.MongoClient(
     "mongodb://localhost:27017")
-
 db = client.Studetails
 usercollections = db.users
 stucollections = db.student
@@ -512,67 +508,68 @@ def view_data():
 # here we are assigning the classname and seat num for each class
 @app.route('/details', methods=['POST'])
 def details():
-    # Get the list of selected items from the form
-    items = request.form.getlist('item[]')
-    
-    # List to store the details of selected classes
-    class_data = []
-    
-    # Dictionary mapping class items to their details
-    class_details = {
-        'ADM 303': {'class_name': 'ADM 303', 'column': 6, 'rows': 7},
-        'ADM 304': {'class_name': 'ADM 304', 'column': 8, 'rows': 3},
-        'ADM 305': {'class_name': 'ADM 305', 'column': 7, 'rows': 3},
-        'ADM 306': {'class_name': 'ADM 306', 'column': 7, 'rows': 3},
-        'ADM 307': {'class_name': 'ADM 307', 'column': 7, 'rows': 3},
-        'ADM 308': {'class_name': 'ADM 308', 'column': 7, 'rows': 3},
-        'ADM 309': {'class_name': 'ADM 309', 'column': 7, 'rows': 3},
-        'ADM 310': {'class_name': 'ADM 310', 'column': 7, 'rows': 3},
-        'ADM 311': {'class_name': 'ADM 311', 'column': 7, 'rows': 3},
-        'EAB 206': {'class_name': 'EAB 206', 'column': 7, 'rows': 3},
-        'EAB 306': {'class_name': 'EAB 306', 'column': 7, 'rows': 3},
-        'EAB 401': {'class_name': 'EAB 401', 'column': 8, 'rows': 3},
-        'EAB 304': {'class_name': 'EAB 304', 'column': 7, 'rows': 3},
-        'EAB 303': {'class_name': 'EAB 303', 'column': 7, 'rows': 3},
-        'EAB 104': {'class_name': 'EAB 104', 'column': 7, 'rows': 3},
-        'EAB 103': {'class_name': 'EAB 103', 'column': 7, 'rows': 3},
-        'EAB 203': {'class_name': 'EAB 203', 'column': 7, 'rows': 3},
-        'EAB 204': {'class_name': 'EAB 204', 'column': 7, 'rows': 3},
-        'WAB 206': {'class_name': 'WAB 206', 'column': 7, 'rows': 3},
-        'WAB 105': {'class_name': 'WAB 105', 'column': 7, 'rows': 3},
-        'WAB 107': {'class_name': 'WAB 107', 'column': 7, 'rows': 3},
-        'WAB 207': {'class_name': 'WAB 207', 'column': 8, 'rows': 3},
-        'WAB 212': {'class_name': 'WAB 212', 'column': 7, 'rows': 3},
-        'WAB 210': {'class_name': 'WAB 210', 'column': 7, 'rows': 3},
-        'WAB 211': {'class_name': 'WAB 211', 'column': 7, 'rows': 3},
-        'WAB 205': {'class_name': 'WAB 205', 'column': 7, 'rows': 3},
-        'WAB 305': {'class_name': 'WAB 305', 'column': 7, 'rows': 3},
-        'WAB 303': {'class_name': 'WAB 303', 'column': 7, 'rows': 3},
-        'WAB 403': {'class_name': 'WAB 403', 'column': 7, 'rows': 3},
-        'WAB 405': {'class_name': 'WAB 405', 'column': 7, 'rows': 3},
-        'EAB 415': {'class_name': 'EAB 415', 'column': 7, 'rows': 3},
-        'EAB 416': {'class_name': 'EAB 416', 'column': 8, 'rows': 3},
-        'WAB 412': {'class_name': 'WAB 412', 'column': 7, 'rows': 3},
-        'EAB 310': {'class_name': 'EAB 310', 'column': 7, 'rows': 3},
-    }
+    if request.method == 'POST':
+        # Get the list of selected items from the form
+        items = request.form.getlist('item[]')
 
-    for item in items:
-        if item in class_details:
-            class_data.append(class_details[item])
+        # List to store the details of selected classes
+        class_data = []
 
-    # Write the class_data list to 'static/stuarrange.txt' file as JSON
-    with open('static/stuarrange.txt', 'w') as f:
-        json.dump(class_data, f, indent=4)
+        # Dictionary mapping class items to their details
+        class_details = {
+            'ADM 303': {'class_name': 'ADM 303', 'column': 6, 'rows': 7},
+            'ADM 304': {'class_name': 'ADM 304', 'column': 8, 'rows': 3},
+            'ADM 305': {'class_name': 'ADM 305', 'column': 7, 'rows': 3},
+            'ADM 306': {'class_name': 'ADM 306', 'column': 7, 'rows': 3},
+            'ADM 307': {'class_name': 'ADM 307', 'column': 7, 'rows': 3},
+            'ADM 308': {'class_name': 'ADM 308', 'column': 7, 'rows': 3},
+            'ADM 309': {'class_name': 'ADM 309', 'column': 7, 'rows': 3},
+            'ADM 310': {'class_name': 'ADM 310', 'column': 7, 'rows': 3},
+            'ADM 311': {'class_name': 'ADM 311', 'column': 7, 'rows': 3},
+            'EAB 206': {'class_name': 'EAB 206', 'column': 7, 'rows': 3},
+            'EAB 306': {'class_name': 'EAB 306', 'column': 7, 'rows': 3},
+            'EAB 401': {'class_name': 'EAB 401', 'column': 8, 'rows': 3},
+            'EAB 304': {'class_name': 'EAB 304', 'column': 7, 'rows': 3},
+            'EAB 303': {'class_name': 'EAB 303', 'column': 7, 'rows': 3},
+            'EAB 104': {'class_name': 'EAB 104', 'column': 7, 'rows': 3},
+            'EAB 103': {'class_name': 'EAB 103', 'column': 7, 'rows': 3},
+            'EAB 203': {'class_name': 'EAB 203', 'column': 7, 'rows': 3},
+            'EAB 204': {'class_name': 'EAB 204', 'column': 7, 'rows': 3},
+            'WAB 206': {'class_name': 'WAB 206', 'column': 7, 'rows': 3},
+            'WAB 105': {'class_name': 'WAB 105', 'column': 7, 'rows': 3},
+            'WAB 107': {'class_name': 'WAB 107', 'column': 7, 'rows': 3},
+            'WAB 207': {'class_name': 'WAB 207', 'column': 8, 'rows': 3},
+            'WAB 212': {'class_name': 'WAB 212', 'column': 7, 'rows': 3},
+            'WAB 210': {'class_name': 'WAB 210', 'column': 7, 'rows': 3},
+            'WAB 211': {'class_name': 'WAB 211', 'column': 7, 'rows': 3},
+            'WAB 205': {'class_name': 'WAB 205', 'column': 7, 'rows': 3},
+            'WAB 305': {'class_name': 'WAB 305', 'column': 7, 'rows': 3},
+            'WAB 303': {'class_name': 'WAB 303', 'column': 7, 'rows': 3},
+            'WAB 403': {'class_name': 'WAB 403', 'column': 7, 'rows': 3},
+            'WAB 405': {'class_name': 'WAB 405', 'column': 7, 'rows': 3},
+            'EAB 415': {'class_name': 'EAB 415', 'column': 8, 'rows': 15},
+            'EAB 416': {'class_name': 'EAB 416', 'column': 8, 'rows': 14},
+            'WAB 412': {'class_name': 'WAB 412', 'column': 7, 'rows': 3},
+            'EAB 310': {'class_name': 'EAB 310', 'column': 7, 'rows': 3},
+        }
 
-    global filled
-    filled = False
-    return render_template('classdetails.html', class_data=class_data)
+        for item in items:
+            if item in class_details:
+                class_data.append(class_details[item])
+
+        # Write the class_data list to 'static/stuarrange.txt' file as JSON
+        with open('static/stuarrange.txt', 'w') as f:
+            json.dump(class_data, f, indent=4)
+
+        global filled
+        filled = False
+        return render_template('classdetails.html', class_data=class_data)
 
 
 # here the seating is done
 # only two students can sit one bench but with different subjects as exam
 # -issue-:this issue may arise when there is limited class and students with same subject maybe seated nearby
-# using the skeleton file stuarrange.txt the students are seated into the classrooms
+# using the skeleton file stuarrange.txt the students are seated into the classroom
 # the timetable/date is noted . stuarrange.txt files which is the seating arrangement is generated for each day in the timetable
 
 @app.route('/seating', methods=['GET'])
@@ -712,6 +709,14 @@ def seating():
                     listy.append(firstitem)
                     
             newlist = list(stulist)
+            
+            stunum=0
+            for listitem in listy:
+                stunum += len(listitem["ro"])
+            if stunum> 0:
+                    flash('Warning: Number of items exceeds total capacity.', 'danger')
+                    return render_template('classavailable.html',stunum=stunum)
+            
             # Open 'stuarrange<date>.txt' file in write mode
             with open('static/stuarrange'+date+'.txt', 'w') as f:
                 json.dump(newlist, f, indent=4)
