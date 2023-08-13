@@ -7,6 +7,8 @@ import fnmatch
 import json
 import pymongo
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+from pymongo import MongoClient
 
 # configuring flask
 
@@ -15,9 +17,20 @@ app.debug = True
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\uploads'
 
-# configuring mongodb
-client = pymongo.MongoClient(
-    "mongodb://localhost:27017")
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the MongoDB connection string from the environment variable
+# to set environment variable setx MONGO_PASSWORD your_actual_password
+MONGO_PASSWORD =os.getenv("MONGO_PASSWORD")
+MONGO_URI = f"mongodb+srv://afreenpoly:{MONGO_PASSWORD}@studetails.ebwix9o.mongodb.net/"
+
+# Connect to MongoDB
+client = MongoClient(MONGO_URI)
+
+# client = pymongo.MongoClient(
+#     "mongodb://localhost:27017")
+
 db = client.Studetails
 usercollections = db.users
 stucollections = db.student
