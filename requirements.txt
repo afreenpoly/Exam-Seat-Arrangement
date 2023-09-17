@@ -52,3 +52,4 @@ virtualenv==20.20.0
 wcwidth==0.2.5
 Werkzeug==2.2.3
 xlrd==2.0.1
+gunicorn
