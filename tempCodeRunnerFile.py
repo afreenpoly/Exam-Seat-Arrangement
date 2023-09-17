@@ -1,5 +1,3 @@
-flash('Upload successful', 'success')
-        return render_template('timetableupload.html')
-    else:
-        flash('Upload failed', 'danger')
-        return render_template('timetableupload.html')
+# Get the MongoDB connection string from the environment variable
+MONGO_PASSWORD = os.getenv("MONGO_PASSWORD")
+print(MONGO_PASSWORD)
