@@ -21,9 +21,10 @@ app.config['UPLOAD_FOLDER'] = r'C:\Users\hp\Desktop\Exam-Seat-Arrangement\upload
 load_dotenv()
 
 # Get the MongoDB connection string from the environment variable
-# to set environment variable setx MONGO_PASSWORD your_actual_password
+# to set environment variable setx MONGO_PASSWORD your_password
 MONGO_PASSWORD =os.getenv("MONGO_PASSWORD")
 MONGO_URI = f"mongodb+srv://afreenpoly:{MONGO_PASSWORD}@studetails.ebwix9o.mongodb.net/"
+
 
 # Connect to MongoDB
 client = MongoClient(MONGO_URI)
