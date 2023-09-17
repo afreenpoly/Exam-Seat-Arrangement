@@ -830,10 +830,4 @@ def reset_dates():
 if __name__ == '__main__':
     app.run()
 
-# -issue-: The output should be displayed as a table with seatnumber and their rollnumber.
-    # the heading should be the classroom name
-    # this should be downloadable
-# -issue-: Another output should be generated in which a range is displayed for the current day and the corresponding seating
-    # ex: 25-12-2025
-    # 12012001 - 12012035  : EAB 103
-    # 12012036 - 12012063  : EAB 104
+
