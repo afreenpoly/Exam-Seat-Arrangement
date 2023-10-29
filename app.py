@@ -3,9 +3,7 @@ from datetime import datetime
 from static.converter import excel_to_json
 import os
 import math
-import fnmatch
 import json
-import pymongo
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from pymongo import MongoClient
