@@ -17,7 +17,6 @@ Flask==2.2.3
 Flask-Bcrypt==1.0.1
 Flask-SQLAlchemy==3.0.3
 greenlet==2.0.2
-ipykernel==6.23.1
 itsdangerous==2.1.2
 jedi==0.18.2
 Jinja2==3.1.2
@@ -52,4 +51,5 @@ virtualenv==20.20.0
 wcwidth==0.2.5
 Werkzeug==2.2.3
 xlrd==2.0.1
-gunicorn
+gunicorn==20.1.0
+
