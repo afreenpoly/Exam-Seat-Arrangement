@@ -24,10 +24,10 @@ You can access the live demo of the application [here](https://exam-seat-arrange
 
 ## Screenshots
 ### Admin Page
-![Admin Page](./screenshots/admin.png)
+![Admin Page](./Screenshots/admin1.png)
 
 ### Student Details
-![Student Details](./screenshots/student_details.png)
+![Student Details](./Screenshots/studetails.png)
 
 
 
