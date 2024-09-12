@@ -14,6 +14,23 @@ You can access the live demo of the application [here](https://exam-seat-arrange
 - Choose the particular year or branch. Upload timetable, student details
 - Reset data, including student information and seating arrangements.
 
+## Technologies Used
+- Python
+- Flask
+- MongoDB
+- HTML
+- CSS
+- Bootstrap
+
+## Screenshots
+### Admin Page
+![admin1](https://user-images.githubusercontent.com/68228966/134767999-3b3b3b3b-1b3b-4b3b-8b3b-3b3b3b3b3b3b.png)
+
+### Student Details
+![studetails](https://user-images.githubusercontent.com/68228966/134768073-3b3b3b3b-1b3b-4b3b-8b3b-3b3b3b3b3b3b.png)
+
+
+
 
 ## Usage
 
