@@ -23,13 +23,14 @@ You can access the live demo of the application [here](https://exam-seat-arrange
 - Bootstrap
 
 ## Screenshots
+   
 ### Admin Page
 ![Admin Page](./Screenshots/admin1.png)
 
 ### Student Details
 ![Student Details](./Screenshots/studetails.png)
 
-
+More screenshots in screenshots folder
 
 
 ## Usage
